@@ -35,11 +35,48 @@ GET http://localhost:8000/health
 GET http://localhost:8003/auth/bypass/1
 Accept: application/json
 
-# {{{ example
+# {{{ users
 
-GET http://localhost:8000/api/v1/example
+GET http://localhost:8000/api/v1/user
 Accept: application/json
-Authorization: Bearer <token>
-Content-type: application/json
+Authorization: Bearer 
+
+GET http://localhost:8000/api/v1/user/1
+Accept: application/json
+Authorization: Bearer 
+
+GET http://localhost:8000/api/v1/user/1/userinclaims
+Accept: application/json
+Authorization: Bearer <robot-token>
+
+GET http://localhost:8000/api/v1/user/me
+Accept: application/json
+Authorization: Bearer 
+
+POST http://localhost:8000/api/v1/user
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "depends_on": 1,
+  "role_id": 2,
+  "active": false
+}
+
+GET http://localhost:8000/api/v1/user/14
+Accept: application/json
+Authorization: Bearer 
+
+PUT http://localhost:8000/api/v1/user/14
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "depends_on": 1,
+  "role_id": 2,
+  "active": true
+}
 
 # }}}

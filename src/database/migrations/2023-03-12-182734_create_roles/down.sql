@@ -1,0 +1,2 @@
+DROP TABLE roles CASCADE;
+-- DROP PUBLICATION roles_pub;

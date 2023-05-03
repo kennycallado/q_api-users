@@ -1,0 +1,2 @@
+DROP TABLE users CASCADE;
+DROP PUBLICATION users_pub;
