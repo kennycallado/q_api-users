@@ -34,8 +34,9 @@ Accept: application/json
 
 # {{{ example
 
-GET http://localhost:8001/api/v1/profiles/1
+GET http://localhost:8000/api/v1/example
 Accept: application/json
 Authorization: Bearer <token>
+Content-type: application/json
 
 # }}}
