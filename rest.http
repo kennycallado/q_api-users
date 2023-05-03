@@ -26,6 +26,9 @@ GET http://localhost:8023/health
 GET http://localhost:8031/health
 
 GET http://localhost:8032/health
+
+### local
+GET http://localhost:8000/health
 # }}}
 
 ### auth bypass
