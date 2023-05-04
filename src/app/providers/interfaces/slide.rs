@@ -2,6 +2,8 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+use crate::app::providers::interfaces::question::PubQuestion;
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct PubSlide {
@@ -9,7 +11,7 @@ pub struct PubSlide {
     pub slide_type: SlideType,
     pub title: String,
     pub content: Option<String>,
-    pub question_id: Option<i32>,
+    pub question: Option<PubQuestion>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -18,7 +20,7 @@ pub struct PubNewSlide {
     pub slide_type: SlideType,
     pub title: String,
     pub content: Option<String>,
-    pub question_id: Option<i32>,
+    pub question: Option<PubQuestion>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
