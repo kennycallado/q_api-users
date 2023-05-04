@@ -9,4 +9,3 @@ COPY ./Rocket.toml /root
 WORKDIR /root
 
 CMD [ "q-api-users" ]
-
