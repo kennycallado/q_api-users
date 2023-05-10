@@ -2,16 +2,13 @@
 use rocket::http::Status;
 use rocket::serde::{json::Json, uuid::Uuid};
 
-// app
-use crate::app::providers::interfaces::helpers::claims::{
-    // Claims,
-    UserInClaims
-};
-// use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
 use crate::config::database::Db;
 
+// app
+use crate::app::providers::interfaces::helpers::claims::UserInClaims;
+
 // module
-use crate::app::modules::users::model::{NewUser, User};
+use crate::app::modules::users::model::{NewUser, User, NewUserWithProject};
 use crate::app::modules::users::services::repository as user_repository;
 
 async fn helper(db: &Db, new_user: NewUser) -> Result<User, ()> {
@@ -33,88 +30,14 @@ async fn helper(db: &Db, new_user: NewUser) -> Result<User, ()> {
     }
 }
 
-// async fn robot_token_generator() -> Result<String, ()> {
-//     let mut claims: Claims = Claims::from(UserInClaims::default());
+pub async fn post_create_admin(db: Db, _admin: UserInClaims, new_user: NewUserWithProject) -> Result<Json<User>, Status> {
+    // waiting to call the api
+    let _project_id = new_user.project_id;
 
-//     let access_token = claims.enconde_for_robot();
-//     if let Err(_) = access_token {
-//         return Err(());
-//     };
-
-//     match access_token {
-//         Ok(access_token) => Ok(access_token),
-//         Err(_) => Err(()),
-//     }
-// }
-
-// async fn helper_enable_fcm(user: &User) -> Result<Status, Status> {
-//     // TODO: Refactor this
-//     use serde::{Deserialize, Serialize};
-//     #[derive(Serialize, Deserialize)]
-//     struct NewFcmToken {
-//         // HasMap ??
-//         user_id: i32,
-//         fcm_token: Option<String>,
-//     }
-//     // Create new_fcm_token
-//     let new_fcm_token = NewFcmToken {
-//         user_id: user.id,
-//         fcm_token: None,
-//     };
-
-//     // Create robot_token
-//     let robot_token = match robot_token_generator().await {
-//         Ok(robot_token) => robot_token,
-//         Err(_) => return Err(Status::InternalServerError),
-//     };
-
-//     // Get the api_url
-//     let fcm_api_url = ConfigGetter::get_fcm_url()
-//         .unwrap_or("http://localhost:8005/api/v1/fcm".to_string())
-//         + "/token/";
-
-//     // Send the request to the fcm api
-//     let client = reqwest::Client::new();
-//     let res = client
-//         .post(&fcm_api_url)
-//         .header("Accept", "application/json")
-//         .header("Authorization", robot_token)
-//         .header("Content-Type", "application/json")
-//         .json(&new_fcm_token)
-//         .send()
-//         .await;
-
-//     // Validate the response
-//     match res {
-//         Ok(res) => {
-//             // if res.status() != 201 {
-//             if !res.status().to_string().starts_with('2') {
-//                 println!("Error creating the fcm token");
-//                 return Err(Status::from_code(res.status().as_u16()).unwrap());
-//             }
-
-//             Ok(Status::Ok)
-//         }
-//         Err(_) => {
-//             println!("Error creating the fcm token");
-
-//             Err(Status::InternalServerError)
-//         }
-//     }
-// }
-
-pub async fn post_create_admin(
-    db: Db,
-    _admin: UserInClaims,
-    new_user: NewUser,
-) -> Result<Json<User>, Status> {
-    match helper(&db, new_user).await {
+    match helper(&db, new_user.into()).await {
         Ok(user) => {
-            // Create the fcm token
-            // match helper_enable_fcm(&user).await {
-            //     Ok(_) => (),
-            //     Err(_) => return Err(Status::InternalServerError),
-            // }
+            // call the projects_api to get the project details
+            // construct the userproject and save it
             Ok(Json(user))
         }
         Err(_) => Err(Status::InternalServerError),
@@ -124,7 +47,7 @@ pub async fn post_create_admin(
 pub async fn post_create_coord(
     db: Db,
     coord: UserInClaims,
-    new_user: NewUser,
+    new_user: NewUserWithProject,
 ) -> Result<Json<User>, Status> {
     match new_user.role_id {
         3 => {
@@ -154,13 +77,8 @@ pub async fn post_create_coord(
         _ => return Err(Status::Unauthorized),
     }
 
-    match helper(&db, new_user).await {
+    match helper(&db, new_user.into()).await {
         Ok(user) => {
-            // Create the fcm token
-            // match helper_enable_fcm(&user).await {
-            //     Ok(_) => (),
-            //     Err(_) => return Err(Status::InternalServerError),
-            // }
             Ok(Json(user))
         }
         Err(_) => Err(Status::InternalServerError),
@@ -170,7 +88,7 @@ pub async fn post_create_coord(
 pub async fn post_create_thera(
     db: Db,
     thera: UserInClaims,
-    new_user: NewUser,
+    new_user: NewUserWithProject,
 ) -> Result<Json<User>, Status> {
     match new_user.role_id {
         4 => {
@@ -184,13 +102,8 @@ pub async fn post_create_thera(
         _ => return Err(Status::Unauthorized),
     }
 
-    match helper(&db, new_user).await {
+    match helper(&db, new_user.into()).await {
         Ok(user) => {
-            // Create the fcm token
-            // match helper_enable_fcm(&user).await {
-            //     Ok(_) => (),
-            //     Err(_) => return Err(Status::InternalServerError),
-            // }
             Ok(Json(user))
         }
         Err(_) => Err(Status::InternalServerError),

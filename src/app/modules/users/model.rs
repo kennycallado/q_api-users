@@ -56,3 +56,22 @@ impl From<User> for NewUser {
         }
     }
 }
+
+impl From<NewUserWithProject> for NewUser {
+    fn from(user: NewUserWithProject) -> Self {
+        NewUser {
+            depends_on: user.depends_on,
+            role_id: user.role_id,
+            active: user.active,
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct NewUserWithProject {
+    pub depends_on: i32,
+    pub role_id: i32,
+    pub active: bool,
+    pub project_id: Option<i32>,
+}

@@ -6,14 +6,9 @@ use crate::app::providers::guards::claims::AccessClaims;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 use crate::config::database::Db;
 
-use crate::app::modules::users::model::{NewUser, User, UserExpanded};
+use crate::app::modules::users::model::{NewUser, User, UserExpanded, NewUserWithProject};
+use crate::app::modules::users::handlers::{create,index,show,update};
 use crate::app::modules::users::services::repository as user_repository;
-
-use super::handlers::create;
-use super::handlers::index;
-// use super::handlers::patch;
-use super::handlers::show;
-use super::handlers::update;
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
@@ -119,12 +114,12 @@ pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Js
 }
 
 #[get("/me", rank = 2)]
-pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<User>, Status> {
-    let user = user_repository::get_user_by_id(&db, claims.0.user.id).await;
+pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpanded>, Status> {
+    let id = claims.0.user.id;
 
-    match user {
+    match show::get_show_admin(db, claims.0.user, id).await {
         Ok(user) => {
-            if user.active { Ok(Json(user)) } else { Err(Status::Unauthorized) }
+            if user.active { Ok(user) } else { Err(Status::Unauthorized) }
         },
         Err(_) => {
             println!("Error: bla bla");
@@ -144,11 +139,7 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 }
 
 #[post("/", data = "<new_user>", rank = 1)]
-pub async fn post_create(
-    db: Db,
-    claims: AccessClaims,
-    new_user: Json<NewUser>,
-) -> Result<Json<User>, Status> {
+pub async fn post_create(db: Db, claims: AccessClaims, new_user: Json<NewUserWithProject>) -> Result<Json<User>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => create::post_create_admin(db, claims.0.user, new_user.into_inner()).await,
         "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,
@@ -193,30 +184,3 @@ pub async fn put_update(
 pub async fn put_update_none(_id: i32, _new_user: Json<NewUser>) -> Status {
     Status::Unauthorized
 }
-
-// #[patch("/<id>/fcm", data = "<fcm_token>", rank = 1)]
-// pub async fn patch_fcm_token(
-//     db: Db,
-//     claims: AccessClaims,
-//     id: i32,
-//     fcm_token: Json<String>,
-// ) -> Result<Status, Status> {
-//     match claims.0.user.role.name.as_str() {
-//         "admin" => patch::patch_fcm_user(db, claims.0.user, id, fcm_token.into_inner()).await,
-//         "coord" => patch::patch_fcm_user(db, claims.0.user, id, fcm_token.into_inner()).await,
-//         "thera" => patch::patch_fcm_user(db, claims.0.user, id, fcm_token.into_inner()).await,
-//         "user" => patch::patch_fcm_user(db, claims.0.user, id, fcm_token.into_inner()).await,
-//         _ => {
-//             println!(
-//                 "Error: patch_update_fcm_user; Role not handled {}",
-//                 claims.0.user.role.name
-//             );
-//             Err(Status::BadRequest)
-//         }
-//     }
-// }
-
-// #[patch("/<_id>/fcm", data = "<_fcm_token>", rank = 2)]
-// pub async fn patch_fcm_token_none(_id: i32, _fcm_token: Json<String>) -> Status {
-//     Status::Unauthorized
-// }
