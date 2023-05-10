@@ -6,9 +6,8 @@ use crate::app::providers::guards::claims::AccessClaims;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 use crate::config::database::Db;
 
-use crate::app::modules::users::model::{NewUser, User, UserExpanded, NewUserWithProject};
-use crate::app::modules::users::handlers::{create,index,show,update};
-use crate::app::modules::users::services::repository as user_repository;
+use crate::app::modules::users::handlers::{create, index, show, update};
+use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
@@ -73,12 +72,16 @@ pub async fn get_index_none() -> Status {
 }
 
 #[get("/<id>", rank = 1)]
-pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show(
+    db: Db,
+    claims: AccessClaims,
+    id: i32,
+) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
-        "user"  => show::get_show_user(db, claims.0.user, id).await,
+        "user" => show::get_show_user(db, claims.0.user, id).await,
         _ => {
             println!(
                 "Error: get_show; Role not handled {}",
@@ -95,7 +98,11 @@ pub async fn get_show_none(_id: i32) -> Status {
 }
 
 #[get("/<id>/userinclaims", rank = 1)]
-pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
+pub async fn get_show_claims(
+    db: Db,
+    claims: AccessClaims,
+    id: i32,
+) -> Result<Json<UserInClaims>, Status> {
     // Check if the token is a robot token
     if claims.0.iat + ROBOT_TOKEN_EXPIRATION != claims.0.exp {
         return Err(Status::Unauthorized);
@@ -119,8 +126,12 @@ pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpand
 
     match show::get_show_admin(db, claims.0.user, id).await {
         Ok(user) => {
-            if user.active { Ok(user) } else { Err(Status::Unauthorized) }
-        },
+            if user.active {
+                Ok(user)
+            } else {
+                Err(Status::Unauthorized)
+            }
+        }
         Err(_) => {
             println!("Error: bla bla");
             Err(Status::InternalServerError)
@@ -139,7 +150,11 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 }
 
 #[post("/", data = "<new_user>", rank = 1)]
-pub async fn post_create(db: Db, claims: AccessClaims, new_user: Json<NewUserWithProject>) -> Result<Json<User>, Status> {
+pub async fn post_create(
+    db: Db,
+    claims: AccessClaims,
+    new_user: Json<NewUserWithProject>,
+) -> Result<Json<User>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => create::post_create_admin(db, claims.0.user, new_user.into_inner()).await,
         "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,

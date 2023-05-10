@@ -8,7 +8,7 @@ use crate::config::database::Db;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 
 // module
-use crate::app::modules::users::model::{NewUser, User, NewUserWithProject};
+use crate::app::modules::users::model::{NewUser, NewUserWithProject, User};
 use crate::app::modules::users::services::repository as user_repository;
 
 async fn helper(db: &Db, new_user: NewUser) -> Result<User, ()> {
@@ -30,7 +30,11 @@ async fn helper(db: &Db, new_user: NewUser) -> Result<User, ()> {
     }
 }
 
-pub async fn post_create_admin(db: Db, _admin: UserInClaims, new_user: NewUserWithProject) -> Result<Json<User>, Status> {
+pub async fn post_create_admin(
+    db: Db,
+    _admin: UserInClaims,
+    new_user: NewUserWithProject,
+) -> Result<Json<User>, Status> {
     // waiting to call the api
     let _project_id = new_user.project_id;
 
@@ -78,9 +82,7 @@ pub async fn post_create_coord(
     }
 
     match helper(&db, new_user.into()).await {
-        Ok(user) => {
-            Ok(Json(user))
-        }
+        Ok(user) => Ok(Json(user)),
         Err(_) => Err(Status::InternalServerError),
     }
 }
@@ -103,9 +105,7 @@ pub async fn post_create_thera(
     }
 
     match helper(&db, new_user.into()).await {
-        Ok(user) => {
-            Ok(Json(user))
-        }
+        Ok(user) => Ok(Json(user)),
         Err(_) => Err(Status::InternalServerError),
     }
 }
