@@ -3,12 +3,10 @@ use diesel::prelude::*;
 
 // app
 use crate::config::database::Db;
-use crate::database::schema::roles;
 use crate::database::schema::users;
 
 // module
-use crate::app::modules::roles::model::Role;
-use crate::app::modules::users::model::{NewUser, User, UserExpanded};
+use crate::app::modules::users::model::{NewUser, User};
 
 pub async fn get_all(db: &Db) -> Result<Vec<User>, diesel::result::Error> {
     let users = db.run(move |conn| users::table.load::<User>(conn)).await;
@@ -22,52 +20,6 @@ pub async fn get_user_by_id(db: &Db, id: i32) -> Result<User, diesel::result::Er
         .await;
 
     user
-}
-
-pub async fn get_user_expanded_by_id(
-    db: &Db,
-    id: i32,
-) -> Result<UserExpanded, diesel::result::Error> {
-    let user_expanded = db
-        .run(move |conn| {
-            // Option to do it with inner join
-            // and then ask for the depends_on user
-            // let user_role = roles::table
-            //     .inner_join(users::table)
-            //     .filter(users::id.eq(id))
-            //     .first::<(Role, User)>(conn);
-
-            // let user_role = user_role.unwrap();
-
-            let user = users::table.filter(users::id.eq(id)).first::<User>(conn);
-
-            let user = user.unwrap();
-
-            let role = roles::table
-                .filter(roles::id.eq(user.role_id))
-                .first::<Role>(conn);
-
-            let role = role.unwrap();
-
-            let depends_on = users::table
-                .filter(users::id.eq(user.depends_on))
-                .first::<User>(conn);
-            let depends_on = depends_on.unwrap();
-
-            UserExpanded {
-                id: user.id,
-                depends_on,
-                role,
-                user_token: user.user_token,
-                // fcm_token: user.fcm_token,
-                active: user.active,
-                created_at: user.created_at,
-                updated_at: user.updated_at,
-            }
-        })
-        .await;
-
-    Ok(user_expanded)
 }
 
 pub async fn get_users_by_depend(

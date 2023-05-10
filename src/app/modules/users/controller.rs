@@ -6,7 +6,7 @@ use crate::app::providers::guards::claims::AccessClaims;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 use crate::config::database::Db;
 
-use crate::app::modules::users::model::{NewUser, User};
+use crate::app::modules::users::model::{NewUser, User, UserExpanded};
 use crate::app::modules::users::services::repository as user_repository;
 
 use super::handlers::create;
@@ -78,12 +78,12 @@ pub async fn get_index_none() -> Status {
 }
 
 #[get("/<id>", rank = 1)]
-pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<User>, Status> {
+pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
-        "user" => show::get_show_user(db, claims.0.user, id).await,
+        "user"  => show::get_show_user(db, claims.0.user, id).await,
         _ => {
             println!(
                 "Error: get_show; Role not handled {}",
@@ -100,11 +100,7 @@ pub async fn get_show_none(_id: i32) -> Status {
 }
 
 #[get("/<id>/userinclaims", rank = 1)]
-pub async fn get_show_claims(
-    db: Db,
-    claims: AccessClaims,
-    id: i32,
-) -> Result<Json<UserInClaims>, Status> {
+pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
     // Check if the token is a robot token
     if claims.0.iat + ROBOT_TOKEN_EXPIRATION != claims.0.exp {
         return Err(Status::Unauthorized);
