@@ -8,6 +8,16 @@ diesel::table! {
 }
 
 diesel::table! {
+    user_project (id) {
+        id -> Int4,
+        user_id -> Int4,
+        project_id -> Int4,
+        keys -> Array<Nullable<Text>>,
+        values -> Jsonb,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         depends_on -> Int4,
@@ -21,4 +31,8 @@ diesel::table! {
 
 diesel::joinable!(users -> roles (role_id));
 
-diesel::allow_tables_to_appear_in_same_query!(roles, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+    roles,
+    user_project,
+    users,
+);
