@@ -61,10 +61,11 @@ Content-Type: application/json
 {
   "depends_on": 1,
   "role_id": 2,
-  "active": false
+  "active": false,
+  "project_id": 1
 }
 
-GET http://localhost:8000/api/v1/user/14
+GET http://localhost:8000/api/v1/user/12
 Accept: application/json
 Authorization: Bearer 
 
