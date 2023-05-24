@@ -5,6 +5,7 @@ use serde::Deserialize;
 pub struct ConfigGetter {
     pub origin_url: Option<String>,
     pub secret_key: Option<String>,
+    pub fetch: Option<bool>,
     pub migrations_run: Option<bool>,
     //
     pub profile_url: Option<String>,
@@ -44,6 +45,13 @@ impl ConfigGetter {
             "paper" => ConfigGetter::get_paper_url(),
             _ => None,
         }
+    }
+
+    pub fn get_fetch() -> Option<bool> {
+        rocket::Config::figment()
+            .extract::<ConfigGetter>()
+            .unwrap()
+            .fetch
     }
 
     pub fn get_migrations_run() -> Option<bool> {

@@ -8,6 +8,7 @@ address    = "0.0.0.0"
 origin_url = "http://localhost:8000"
 secret_key = ""
 
+fetch      = false
 migrations_run = false
 
 profile_url   = "http://localhost:8001/api/v1/profile"

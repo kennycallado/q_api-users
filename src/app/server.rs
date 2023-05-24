@@ -3,8 +3,10 @@ use rocket::fairing::AdHoc;
 use crate::config::cors;
 use crate::config::database;
 
-use super::modules::routing as modules_routing;
 use super::providers::interfaces::helpers::config_getter::ConfigGetter;
+use super::providers::interfaces::helpers::fetch::Fetch;
+
+use super::modules::routing as modules_routing;
 use super::routing as service_routing;
 
 #[launch]
@@ -19,6 +21,11 @@ pub fn rocket() -> _ {
                 "Diesel Migrations",
                 database::run_migrations,
             ));
+    }
+
+    // Only manage the fetch if fetch is true
+    if ConfigGetter::get_fetch().unwrap_or(false) {
+        rocket_build = rocket_build.manage(Fetch::new());
     }
 
     rocket_build
