@@ -5,6 +5,7 @@ use serde::Deserialize;
 pub struct ConfigGetter {
     pub origin_url: Option<String>,
     pub secret_key: Option<String>,
+    pub cron: Option<bool>,
     pub fetch: Option<bool>,
     pub migrations_run: Option<bool>,
     //
@@ -45,6 +46,13 @@ impl ConfigGetter {
             "paper" => ConfigGetter::get_paper_url(),
             _ => None,
         }
+    }
+
+    pub fn get_cron() -> Option<bool> {
+        rocket::Config::figment()
+            .extract::<ConfigGetter>()
+            .unwrap()
+            .cron
     }
 
     pub fn get_fetch() -> Option<bool> {

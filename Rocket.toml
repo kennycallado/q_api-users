@@ -8,6 +8,7 @@ address    = "0.0.0.0"
 origin_url = "http://localhost:8000"
 secret_key = ""
 
+cron       = false
 fetch      = false
 migrations_run = false
 
