@@ -1,9 +1,20 @@
 ---
-
 # https://github.com/fcsonline/drill
 # drill --benchmark benchmark.yml --stats
+# also see
+# https://varnish-cache.org/intro/index.html#intro
+#
+# ``` bash
+# export TOKEN=$(curl http://localhost:8003/auth/bypass/1/ | jq .access_token | tr -d '\"')
+# drill --benchmark benchmark.yml --stats
+# ```
+#
+# Genera reporte
+# drill --benchmark benchmark.yml --report result
+# compara reporte con límite 1ms
+# drill --benchmark benchmark.yml --compare result --threshold 1
 
-concurrency: 2
+concurrency: 4
 base: 'http://localhost:8000'
 iterations: 10
 
@@ -11,23 +22,22 @@ plan:
   # - name: Include comments
   #   include: comments.yml
   
-  # - name: Assert request response code
-  #   assert:
-  #     key: foo.status
-  #     value: 200
+  # - name: Waiting some seconds
+  #   delay:
+  #     seconds: 1
 
-  # ???
-  # - name: Assign values
+  # - name: Assign access_token
   #   assign:
-  #     key: token
-  #     value: "2"
-  #
-  # - name: bla
-  #   request:
-  #     heathers:
-  #       Authorization: Bearer {{ token }}
-  #     url: '/health'
+  #     key: TOKEN
+  #     value: ""
+  
+  # - name: Exec external commands
+  #   exec:
+  #     command: "curl http://localhost:8003/auth/bypass/1/ | jq .access_token | tr -d '\"'"
+  #   assign: TOKEN
+  #   tags: [token]
 
   - name: Heath checker
     request:
       url: '/health'
+---
