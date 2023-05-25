@@ -1,7 +1,9 @@
+#[cfg(feature = "db")]
 use rocket::fairing::AdHoc;
 
-use crate::config::cors;
+#[cfg(feature = "db")]
 use crate::config::database;
+use crate::config::cors;
 
 use super::providers::interfaces::helpers::config_getter::ConfigGetter;
 use super::providers::interfaces::helpers::cron::CronManager;
@@ -15,7 +17,9 @@ pub async fn rocket() -> _ {
     let mut rocket_build = rocket::build();
 
     // Only attach the database if migrations_run is true
-    if ConfigGetter::get_migrations_run().unwrap_or(false) {
+    // if ConfigGetter::get_migrations_run().unwrap_or(false) {
+    #[cfg(feature = "db")]
+    {
         rocket_build = rocket_build
             .attach(database::Db::fairing())
             .attach(AdHoc::on_ignite(
