@@ -1,0 +1,33 @@
+---
+
+# https://github.com/fcsonline/drill
+# drill --benchmark benchmark.yml --stats
+
+concurrency: 2
+base: 'http://localhost:8000'
+iterations: 10
+
+plan:
+  # - name: Include comments
+  #   include: comments.yml
+  
+  # - name: Assert request response code
+  #   assert:
+  #     key: foo.status
+  #     value: 200
+
+  # ???
+  # - name: Assign values
+  #   assign:
+  #     key: token
+  #     value: "2"
+  #
+  # - name: bla
+  #   request:
+  #     heathers:
+  #       Authorization: Bearer {{ token }}
+  #     url: '/health'
+
+  - name: Heath checker
+    request:
+      url: '/health'
