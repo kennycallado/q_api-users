@@ -4,13 +4,14 @@ use crate::config::cors;
 use crate::config::database;
 
 use super::providers::interfaces::helpers::config_getter::ConfigGetter;
+use super::providers::interfaces::helpers::cron::CronManager;
 use super::providers::interfaces::helpers::fetch::Fetch;
 
 use super::modules::routing as modules_routing;
 use super::routing as service_routing;
 
 #[launch]
-pub fn rocket() -> _ {
+pub async fn rocket() -> _ {
     let mut rocket_build = rocket::build();
 
     // Only attach the database if migrations_run is true
@@ -26,6 +27,11 @@ pub fn rocket() -> _ {
     // Only manage the fetch if fetch is true
     if ConfigGetter::get_fetch().unwrap_or(false) {
         rocket_build = rocket_build.manage(Fetch::new());
+    }
+
+    // Only manage the cron if cron is true
+    if ConfigGetter::get_cron().unwrap_or(false) {
+        rocket_build = rocket_build.manage(CronManager::new().await);
     }
 
     rocket_build
