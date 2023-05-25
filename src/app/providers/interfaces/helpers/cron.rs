@@ -1,22 +1,28 @@
+#[cfg(feature = "cron")]
 use std::sync::Arc;
 
+#[cfg(feature = "cron")]
 use rocket::serde::uuid::Uuid;
+#[cfg(feature = "cron")]
 use rocket::tokio::sync::Mutex;
 
-// #[cfg(feature = "cron")]
+#[cfg(feature = "cron")]
 use tokio_cron_scheduler::{Job, JobScheduler, JobSchedulerError};
 
+#[cfg(feature = "cron")]
 #[derive(Clone)]
 pub struct JobManager {
     pub id: i32,
     pub job: Uuid,
 }
 
+#[cfg(feature = "cron")]
 pub struct CronManager {
     pub scheduler: Arc<Mutex<JobScheduler>>,
     pub jobs: Arc<Mutex<Vec<JobManager>>>,
 }
 
+#[cfg(feature = "cron")]
 impl CronManager {
     pub async fn new() -> Self {
         let scheduler = JobScheduler::new().await.unwrap();

@@ -4,11 +4,12 @@ version = "0.1.3"
 edition = "2021"
 
 [features]
-defautl = ["full"]
-full  =  ["db"]
-# cron  = ["tokio-cron-scheduler"]
+defautl = []
+full  =  ["db", "fetch", "cron"]
+
+cron  = ["tokio-cron-scheduler"]
 db    = ["diesel", "diesel_migrations", "rocket_sync_db_pools"]
-# fetch = ["reqwest"]
+fetch = ["reqwest"]
 
 [profile.release]
 lto = true
@@ -20,11 +21,11 @@ chrono = { version = "0.4", features = ["serde"] }
 diesel = { version = "2", features = ["postgres", "chrono", "serde_json"], optional = true  }
 diesel_migrations = { version = "2", features = ["postgres"], optional = true }
 jsonwebtoken = "8.2.0"
-reqwest = { version = "0.11", features = ["json"], optional = false }
+reqwest = { version = "0.11", features = ["json"], optional = true }
 rocket = { version = "0.5.0-rc.3", features = ["json", "secrets", "uuid"] }
 rocket_sync_db_pools = { version = "0.1.0-rc.3", features = ["diesel_postgres_pool"], optional = true }
 serde = { version = "1", features = ["derive"] }
-tokio-cron-scheduler = { version = "*", optional = false }
+tokio-cron-scheduler = { version = "*", optional = true }
 
 openssl = "*" # musl
 
