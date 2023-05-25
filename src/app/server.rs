@@ -1,9 +1,9 @@
 #[cfg(feature = "db")]
 use rocket::fairing::AdHoc;
 
+use crate::config::cors;
 #[cfg(feature = "db")]
 use crate::config::database;
-use crate::config::cors;
 
 use super::providers::interfaces::helpers::config_getter::ConfigGetter;
 use super::providers::interfaces::helpers::cron::CronManager;

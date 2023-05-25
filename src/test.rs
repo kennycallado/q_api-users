@@ -5,7 +5,7 @@ use rocket::http::{Accept, ContentType, Status};
 async fn test_health() {
     use rocket::local::asynchronous::Client;
 
-    let client = Client::tracked( rocket().await ).await.unwrap();
+    let client = Client::tracked(rocket().await).await.unwrap();
     let response = client
         .get("/health")
         .header(Accept::JSON)

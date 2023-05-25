@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use rocket::tokio::sync::Mutex;
+use std::sync::Arc;
 
 use super::claims::{Claims, UserInClaims};
 

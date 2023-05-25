@@ -7,7 +7,6 @@ mod test;
 
 extern crate openssl;
 
-
 #[cfg(feature = "db")]
 extern crate diesel;
 #[cfg(feature = "db")]
