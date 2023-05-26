@@ -69,7 +69,7 @@ GET http://localhost:8000/api/v1/user/12
 Accept: application/json
 Authorization: Bearer 
 
-PUT http://localhost:8000/api/v1/user/14
+PUT http://localhost:8000/api/v1/user/10
 Accept: application/json
 Authorization: Bearer 
 Content-Type: application/json
