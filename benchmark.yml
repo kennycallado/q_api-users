@@ -42,14 +42,14 @@ plan:
       url: '/health'
     tags: [ health ]
 
-  - name: Post Show
+  - name: Post Index
     request:
       method: POST
       url: '/api/v1/user'
       headers:
-        Content-Type: application/json
         Accept: application/json
         Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
       body: '{ "depends_on": 1, "role_id": 2, "active": false, "project_id": 1 }'
     tags: [ post ]
 
@@ -82,9 +82,9 @@ plan:
       method: PUT
       url: '/api/v1/user/{{ iteration }}'
       headers:
-        Content-Type: application/json
         Accept: application/json
         Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
       body: '{ "depends_on": 1, "role_id": 2, "active": true }'
     tags: [ put ]
 ---
