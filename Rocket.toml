@@ -27,5 +27,7 @@ paper_url     = "http://localhost:8032/api/v1/paper"
 logic_url     = "http://localhost:8041/api/v1/logic"
 checker_url   = "http://localhost:3000/"
 
+projects_url     = "http://localhost:8051/api/v1/project"
+
 [default.databases.questions]
 url = "postgres://base:base@localhost/base"
