@@ -57,10 +57,7 @@ pub async fn get_index(db: Db, claims: AccessClaims) -> Result<Json<Vec<User>>, 
         "coord" => index::get_index_coord(db, claims.0.user).await,
         "thera" => index::get_index_thera(db, claims.0.user).await,
         _ => {
-            println!(
-                "Error: get_index; Role not handled {}",
-                claims.0.user.role.name
-            );
+            println!("Error: get_index; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
         }
     }
@@ -72,21 +69,14 @@ pub async fn get_index_none() -> Status {
 }
 
 #[get("/<id>", rank = 1)]
-pub async fn get_show(
-    db: Db,
-    claims: AccessClaims,
-    id: i32,
-) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
         "user" => show::get_show_user(db, claims.0.user, id).await,
         _ => {
-            println!(
-                "Error: get_show; Role not handled {}",
-                claims.0.user.role.name
-            );
+            println!("Error: get_show; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
         }
     }
@@ -98,11 +88,7 @@ pub async fn get_show_none(_id: i32) -> Status {
 }
 
 #[get("/<id>/userinclaims", rank = 1)]
-pub async fn get_show_claims(
-    db: Db,
-    claims: AccessClaims,
-    id: i32,
-) -> Result<Json<UserInClaims>, Status> {
+pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
     // Check if the token is a robot token
     if claims.0.iat + ROBOT_TOKEN_EXPIRATION != claims.0.exp {
         return Err(Status::Unauthorized);
@@ -160,10 +146,7 @@ pub async fn post_create(
         "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,
         "thera" => create::post_create_thera(db, claims.0.user, new_user.into_inner()).await,
         _ => {
-            println!(
-                "Error: post_create; Role not handled {}",
-                claims.0.user.role.name
-            );
+            println!("Error: post_create; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
         }
     }
@@ -186,10 +169,7 @@ pub async fn put_update(
         "coord" => update::put_update_coord(db, claims.0.user, id, new_user.into_inner()).await,
         "thera" => update::put_update_thera(db, claims.0.user, id, new_user.into_inner()).await,
         _ => {
-            println!(
-                "Error: put_update; Role not handled {}",
-                claims.0.user.role.name
-            );
+            println!("Error: put_update; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
         }
     }

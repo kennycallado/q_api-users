@@ -22,10 +22,7 @@ pub async fn get_user_by_id(db: &Db, id: i32) -> Result<User, diesel::result::Er
     user
 }
 
-pub async fn get_users_by_depend(
-    db: &Db,
-    depends_on: i32,
-) -> Result<Vec<User>, diesel::result::Error> {
+pub async fn get_users_by_depend(db: &Db, depends_on: i32) -> Result<Vec<User>, diesel::result::Error> {
     let users = db
         .run(move |conn| {
             users::table
@@ -49,11 +46,7 @@ pub async fn add_user(db: &Db, new_user: NewUser) -> Result<User, diesel::result
     user
 }
 
-pub async fn update_user(
-    db: &Db,
-    id: i32,
-    new_user: NewUser,
-) -> Result<User, diesel::result::Error> {
+pub async fn update_user(db: &Db, id: i32, new_user: NewUser) -> Result<User, diesel::result::Error> {
     let user = db
         .run(move |conn| {
             diesel::update(users::table.find(id))

@@ -29,11 +29,10 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
     let role = role.unwrap();
 
     // get user_project
-    let user_project =
-        match user_project_repository::get_user_project_by_user_id(&db, user.id).await {
-            Ok(user_project) => Some(user_project),
-            Err(_) => None,
-        };
+    let user_project = match user_project_repository::get_user_project_by_user_id(&db, user.id).await {
+        Ok(user_project) => Some(user_project),
+        Err(_) => None,
+    };
 
     // build the user_expanded
     let user_expanded = UserExpanded {
@@ -50,11 +49,7 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
     Ok(user_expanded)
 }
 
-pub async fn get_show_admin(
-    db: Db,
-    _admin: UserInClaims,
-    id: i32,
-) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     // get user
     let user = user_repository::get_user_by_id(&db, id).await;
     if let Err(_) = user {
@@ -68,11 +63,7 @@ pub async fn get_show_admin(
     }
 }
 
-pub async fn get_show_coord(
-    db: Db,
-    coord: UserInClaims,
-    id: i32,
-) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     // get user
     let user = user_repository::get_user_by_id(&db, id).await;
     if user.is_err() {
@@ -118,11 +109,7 @@ pub async fn get_show_coord(
     }
 }
 
-pub async fn get_show_thera(
-    db: Db,
-    thera: UserInClaims,
-    id: i32,
-) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_thera(db: Db, thera: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     let user = user_repository::get_user_by_id(&db, id).await;
 
     if user.is_err() {
@@ -153,11 +140,7 @@ pub async fn get_show_thera(
     }
 }
 
-pub async fn get_show_user(
-    db: Db,
-    user_claims: UserInClaims,
-    id: i32,
-) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     let user = user_repository::get_user_by_id(&db, id).await;
 
     if user.is_err() {
@@ -176,11 +159,7 @@ pub async fn get_show_user(
 }
 
 // Should check or update the user_token?
-pub async fn get_show_robot(
-    db: Db,
-    _robot: UserInClaims,
-    id: i32,
-) -> Result<Json<UserInClaims>, Status> {
+pub async fn get_show_robot(db: Db, _robot: UserInClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
     let user = user_repository::get_user_by_id(&db, id).await;
 
     if user.is_err() {

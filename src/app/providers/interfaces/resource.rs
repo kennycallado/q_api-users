@@ -10,7 +10,7 @@ pub struct PubResourceContent {
     pub form: Option<Vec<PubQuestion>>,
     pub external: Option<i32>,
 }
- 
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct PubResource {

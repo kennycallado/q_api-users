@@ -29,9 +29,7 @@ impl Token {
         }
         let token = token.unwrap();
 
-        request
-            .cookies()
-            .remove_private(Cookie::named("refresh_token"));
+        request.cookies().remove_private(Cookie::named("refresh_token"));
 
         let token = token.value().to_string();
         Some(Token(token))

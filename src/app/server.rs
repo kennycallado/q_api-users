@@ -23,10 +23,7 @@ pub async fn rocket() -> _ {
     {
         rocket_build = rocket_build
             .attach(database::Db::fairing())
-            .attach(AdHoc::on_ignite(
-                "Diesel Migrations",
-                database::run_migrations,
-            ));
+            .attach(AdHoc::on_ignite("Diesel Migrations", database::run_migrations));
     }
 
     // Only manage the fetch if feature is enabled

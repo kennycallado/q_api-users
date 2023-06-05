@@ -86,3 +86,5 @@ El directorio de servicios del módulo también puede contener por ejemplo, `hel
 ## TODO:
 
 - [ ] Something
+- [?] New user add fcm row
+- [ ] New user add projects_api record

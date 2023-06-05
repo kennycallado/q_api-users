@@ -15,10 +15,7 @@ impl<'r> FromRequest<'r> for RefreshClaims {
         let token: Token = match Token::from_cookie(request) {
             Some(token) => token,
             None => {
-                return Outcome::Failure((
-                    rocket::http::Status::BadRequest,
-                    ClaimsError::MissingToken,
-                ));
+                return Outcome::Failure((rocket::http::Status::BadRequest, ClaimsError::MissingToken));
             }
         };
 
@@ -26,10 +23,7 @@ impl<'r> FromRequest<'r> for RefreshClaims {
             Ok(claims) => claims.claims,
             Err(e) => {
                 println!("Error: {:?}", e);
-                return Outcome::Failure((
-                    rocket::http::Status::Unauthorized,
-                    ClaimsError::InvalidToken,
-                ));
+                return Outcome::Failure((rocket::http::Status::Unauthorized, ClaimsError::InvalidToken));
             }
         };
 
@@ -51,10 +45,7 @@ impl<'r> FromRequest<'r> for AccessClaims {
             Ok(claims) => claims.claims,
             Err(e) => {
                 println!("Error: {:?}", e);
-                return Outcome::Failure((
-                    rocket::http::Status::Unauthorized,
-                    ClaimsError::InvalidToken,
-                ));
+                return Outcome::Failure((rocket::http::Status::Unauthorized, ClaimsError::InvalidToken));
             }
         };
 
