@@ -71,31 +71,8 @@ pub async fn update_user_token(
         })
         .await;
 
-    if let Err(e) = user {
-        return Err(e);
+    match user {
+        Ok(user) => Ok(user.user_token.unwrap()),
+        Err(e) => Err(e),
     }
-    let user: User = user.unwrap();
-
-    Ok(user.user_token.unwrap()) // Almost sure I can unwrap here
 }
-
-// pub async fn update_fcm_token(
-//     db: &Db,
-//     id: i32,
-//     fcm_token: String,
-// ) -> Result<String, diesel::result::Error> {
-//     let user = db
-//         .run(move |conn| {
-//             diesel::update(users::table.find(id))
-//                 .set(users::fcm_token.eq(fcm_token))
-//                 .get_result::<User>(conn)
-//         })
-//         .await;
-
-//     if let Err(e) = user {
-//         return Err(e);
-//     }
-//     let user: User = user.unwrap();
-
-//     Ok(user.fcm_token.unwrap()) // Almost sure I can unwrap here
-// }

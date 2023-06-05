@@ -32,7 +32,7 @@ pub struct UserExpanded {
     pub role: Role,
     pub user_token: Option<String>,
     pub active: bool,
-    pub project: Option<UserProject>,
+    pub project: UserProject,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -73,5 +73,5 @@ pub struct NewUserWithProject {
     pub depends_on: i32,
     pub role_id: i32,
     pub active: bool,
-    pub project_id: Option<i32>,
+    pub project_id: i32,
 }

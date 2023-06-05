@@ -1,9 +1,12 @@
 use rocket::http::Status;
+use rocket::State;
 use rocket::serde::json::Json;
 
 use crate::app::providers::constants::ROBOT_TOKEN_EXPIRATION;
 use crate::app::providers::guards::claims::AccessClaims;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
+use crate::app::providers::interfaces::helpers::fetch::Fetch;
+
 use crate::config::database::Db;
 
 use crate::app::modules::users::handlers::{create, index, show, update};
@@ -137,14 +140,15 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(
+    fetch: &State<Fetch>,
     db: Db,
     claims: AccessClaims,
     new_user: Json<NewUserWithProject>,
-) -> Result<Json<User>, Status> {
+) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => create::post_create_admin(db, claims.0.user, new_user.into_inner()).await,
-        "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,
-        "thera" => create::post_create_thera(db, claims.0.user, new_user.into_inner()).await,
+        "admin" => create::post_create_admin(fetch, db, claims.0.user, new_user.into_inner()).await,
+        // "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,
+        // "thera" => create::post_create_thera(db, claims.0.user, new_user.into_inner()).await,
         _ => {
             println!("Error: post_create; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
