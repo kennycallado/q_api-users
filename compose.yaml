@@ -21,30 +21,13 @@ services:
       POSTGRES_PASSWORD: users
     command: [ "docker-entrypoint.sh", "-c", "wal_level=logical", "-c", "max_connections=300" ]
 
-# # {{{ fcm
-#   fcm_api:
-#     image: kennycallado/q-api-fcm:latest
-#     ports:
-#       - "8005:8000"
-#     expose:
-#       - "8005:8000"
-#     environment:
-#       - ROCKET_ADDRESS="0.0.0.0"
-#       - ROCKET_PORT=8000
-#       - ROCKET_SECRET_KEY=""
-#       - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
-#     depends_on:
-#       - database
-# # }}}
-
-# {{{ profiles - users - auth
-  # {{{ profiles
-  profiles_api:
-    image: kennycallado/q-api-profiles:latest
+# {{{ fcm
+  fcm_api:
+    image: kennycallado/q-api-fcm:latest
     ports:
-      - "8001:8000"
+      - "8005:8000"
     expose:
-      - "8001:8000"
+      - "8005:8000"
     environment:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
@@ -52,7 +35,24 @@ services:
       - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
     depends_on:
       - database
-  # }}}
+# }}}
+
+# {{{ profiles - users - auth
+  # # {{{ profiles
+  # profiles_api:
+  #   image: kennycallado/q-api-profiles:latest
+  #   ports:
+  #     - "8001:8000"
+  #   expose:
+  #     - "8001:8000"
+  #   environment:
+  #     - ROCKET_ADDRESS="0.0.0.0"
+  #     - ROCKET_PORT=8000
+  #     - ROCKET_SECRET_KEY=""
+  #     - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
+  #   depends_on:
+  #     - database
+  # # }}}
   
   # # {{{ users
   # users_api:
@@ -88,7 +88,7 @@ services:
       - ROCKET_PROFILE_URL="http://profiles_api:8000/api/v1/profile"
       - ROCKET_USER_URL="http://host.docker.internal:8000/api/v1/user"
     depends_on:
-      - profiles_api
+      - fcm_api
   # }}}
 # }}}
 
@@ -213,18 +213,18 @@ services:
   # # }}}
 # }}}
 
-# # {{{ projects
-#   projects_api:
-#     image: kennycallado/q-api-projects:latest
-#     ports:
-#       - "8051:8000"
-#     expose:
-#       - "8051:8000"
-#     environment:
-#       - ROCKET_ADDRESS="0.0.0.0"
-#       - ROCKET_PORT=8000
-#       - ROCKET_SECRET_KEY=""
-#       - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
-#     depends_on:
-#       - database
-# # }}}
+# {{{ projects
+  projects_api:
+    image: kennycallado/q-api-projects:latest
+    ports:
+      - "8051:8000"
+    expose:
+      - "8051:8000"
+    environment:
+      - ROCKET_ADDRESS="0.0.0.0"
+      - ROCKET_PORT=8000
+      - ROCKET_SECRET_KEY=""
+      - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
+    depends_on:
+      - database
+# }}}
