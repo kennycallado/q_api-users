@@ -1,4 +1,7 @@
+use rocket::{State, http::Status};
 use serde::{Deserialize, Serialize};
+
+use super::helpers::{fetch::Fetch, config_getter::ConfigGetter};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
