@@ -67,6 +67,7 @@ services:
       - ROCKET_SECRET_KEY=""
       - ROCKET_DATABASES={questions={url="postgres://base:base@database/base"}}
       - ROCKET_PROJECT_URL="http://projects_api:8000/api/v1/user"
+      - ROCKET_FCM_URL="http://fcm_api:8000/api/v1/fcm"
     depends_on:
       - database
   # }}}
