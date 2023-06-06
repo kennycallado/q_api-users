@@ -65,8 +65,9 @@ services:
   #     - ROCKET_ADDRESS="0.0.0.0"
   #     - ROCKET_PORT=8000
   #     - ROCKET_SECRET_KEY=""
-  #     - ROCKET_MIGRATIONS_RUN=true
   #     - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
+  #     - ROCKET_PROJECT_URL="http://projects_api:8000/api/v1/user"
+  #     - ROCKET_FCM_URL="http://fcm_api:8000/api/v1/fcm"
   #   depends_on:
   #     - database
   #     - profiles_api
