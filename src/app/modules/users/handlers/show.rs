@@ -21,15 +21,12 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
     }
     let depends_on = depends_on.unwrap();
 
-    println!("DEBUG: 1");
-
     // get role
     let role = role_repository::get_role_by_id(&db, user.role_id).await;
     if let Err(_) = role {
         return Err(Status::NotFound);
     }
     let role = role.unwrap();
-    println!("DEBUG: 2");
 
     // get user_project
     let user_project = match user_project_repository::get_user_project_by_user_id(&db, user.id).await {
@@ -39,7 +36,6 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
             return Err(Status::InternalServerError)
         },
     };
-    println!("DEBUG: 3");
 
     // build the user_expanded
     let user_expanded = UserExpanded {
