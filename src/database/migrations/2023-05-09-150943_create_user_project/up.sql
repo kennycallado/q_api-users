@@ -9,7 +9,5 @@ ALTER TABLE user_project
   ;
 
 INSERT INTO user_project (user_id, project_id, keys) VALUES
-  (1, 1, '{step}'),
-  (7, 1, '{step}'),
-  (8, 2, '{step, key1}') 
+  (1, 1, '{}')
   ;

@@ -14,18 +14,8 @@ ALTER TABLE users
 
 SELECT diesel_manage_updated_at('users');
 INSERT INTO users (user_token, depends_on, role_id) VALUES
-  ('admin_user',  1, 1),
-  ('coord1_user', 1, 2),
-  ('coord2_user', 1, 2),
-  ('thera1_user', 2, 3),
-  ('thera2_user', 2, 3),
-  ('thera3_user', 3, 3),
-  ('user1_user',  3, default),
-  ('user2_user',  4, default),
-  ('user3_user',  5, default),
-  ('user4_user',  3, default),
-  ('user5_user',  4, 4)
+  ('admin_user',  1, 1)
   ;
 
-ALTER TABLE users REPLICA IDENTITY FULL;
-CREATE PUBLICATION users_pub FOR TABLE users;
+-- ALTER TABLE users REPLICA IDENTITY FULL;
+-- CREATE PUBLICATION users_pub FOR TABLE users;
