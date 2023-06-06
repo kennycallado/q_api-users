@@ -32,7 +32,7 @@ GET http://localhost:8000/health
 # }}}
 
 ### auth bypass
-GET http://localhost:8003/auth/bypass/1
+GET http://localhost:8003/auth/bypass/13
 Accept: application/json
 
 # {{{ users
@@ -41,7 +41,11 @@ GET http://localhost:8000/api/v1/user
 Accept: application/json
 Authorization: Bearer 
 
-GET http://localhost:8000/api/v1/user/1
+GET http://localhost:8051/api/v1/project/1
+Accept: application/json
+Authorization: Bearer 
+
+GET http://localhost:8000/api/v1/user/13
 Accept: application/json
 Authorization: Bearer 
 
@@ -59,9 +63,9 @@ Authorization: Bearer
 Content-Type: application/json
 
 {
-  "depends_on": 1,
-  "role_id": 2,
-  "active": false,
+  "depends_on": 18,
+  "role_id": 4,
+  "active": true,
   "project_id": 1
 }
 

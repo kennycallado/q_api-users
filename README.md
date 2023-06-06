@@ -88,3 +88,4 @@ El directorio de servicios del módulo también puede contener por ejemplo, `hel
 - [ ] Something
 - [?] New user add fcm row
 - [ ] New user add projects_api record
+- [ ] Admin, coord and thera don't need to be assignet to a proyect...

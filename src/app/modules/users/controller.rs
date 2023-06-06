@@ -140,15 +140,12 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(
-    fetch: &State<Fetch>,
-    db: Db,
-    claims: AccessClaims,
-    new_user: Json<NewUserWithProject>,
+    fetch: &State<Fetch>, db: Db, claims: AccessClaims, new_user: Json<NewUserWithProject>
 ) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => create::post_create_admin(fetch, db, claims.0.user, new_user.into_inner()).await,
-        // "coord" => create::post_create_coord(db, claims.0.user, new_user.into_inner()).await,
-        // "thera" => create::post_create_thera(db, claims.0.user, new_user.into_inner()).await,
+        "admin" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
+        "coord" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
+        "thera" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
         _ => {
             println!("Error: post_create; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
