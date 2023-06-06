@@ -66,6 +66,7 @@ services:
       - ROCKET_PORT=8000
       - ROCKET_SECRET_KEY=""
       - ROCKET_DATABASES={questions={url="postgres://base:base@database/base"}}
+      - ROCKET_PROJECT_URL="http://projects_api:8000/api/v1/user"
     depends_on:
       - database
   # }}}
