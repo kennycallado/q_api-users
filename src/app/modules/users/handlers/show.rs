@@ -21,18 +21,25 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
     }
     let depends_on = depends_on.unwrap();
 
+    println!("DEBUG: 1");
+
     // get role
     let role = role_repository::get_role_by_id(&db, user.role_id).await;
     if let Err(_) = role {
         return Err(Status::NotFound);
     }
     let role = role.unwrap();
+    println!("DEBUG: 2");
 
     // get user_project
     let user_project = match user_project_repository::get_user_project_by_user_id(&db, user.id).await {
         Ok(user_project) => user_project,
-        Err(_) => return Err(Status::InternalServerError),
+        Err(e) => {
+            println!("Error: {}", e);
+            return Err(Status::InternalServerError)
+        },
     };
+    println!("DEBUG: 3");
 
     // build the user_expanded
     let user_expanded = UserExpanded {
@@ -160,15 +167,13 @@ pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result
 
 // Should check or update the user_token?
 pub async fn get_show_robot(db: Db, _robot: UserInClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
-    let user = user_repository::get_user_by_id(&db, id).await;
+    let user = match user_repository::get_user_by_id(&db, id).await {
+        Ok(user) => match user_expanded_constructor(&db, user).await {
+            Ok(user_expanded) => Ok(Json(user_expanded.into())),
+            Err(status) =>  Err(status),
+        },
+        Err(_) => return Err(Status::NotFound),
+    };
 
-    if user.is_err() {
-        return Err(Status::NotFound);
-    }
-    let user = user.unwrap();
-
-    match user_expanded_constructor(&db, user).await {
-        Ok(user_expanded) => Ok(Json(user_expanded.into())),
-        Err(status) => Err(status),
-    }
+    user
 }
