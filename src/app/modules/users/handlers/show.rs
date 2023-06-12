@@ -31,8 +31,8 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
         Ok(user_project) => user_project,
         Err(e) => {
             println!("Error: {}", e);
-            return Err(Status::InternalServerError)
-        },
+            return Err(Status::InternalServerError);
+        }
     };
 
     // build the user_expanded
@@ -162,7 +162,7 @@ pub async fn get_show_robot(db: Db, _robot: UserInClaims, id: i32) -> Result<Jso
     let user = match user_repository::get_user_by_id(&db, id).await {
         Ok(user) => match user_expanded_constructor(&db, user).await {
             Ok(user_expanded) => Ok(Json(user_expanded.into())),
-            Err(status) =>  Err(status),
+            Err(status) => Err(status),
         },
         Err(_) => return Err(Status::NotFound),
     };

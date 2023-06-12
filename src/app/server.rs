@@ -23,10 +23,7 @@ pub async fn rocket() -> _ {
     {
         rocket_build = rocket_build
             .attach(connection::Db::fairing())
-            .attach(AdHoc::on_ignite(
-                "Diesel Migrations",
-                connection::run_migrations,
-            ));
+            .attach(AdHoc::on_ignite("Diesel Migrations", connection::run_migrations));
     }
 
     #[cfg(feature = "fetch")]

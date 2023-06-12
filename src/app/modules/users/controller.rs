@@ -1,6 +1,6 @@
 use rocket::http::Status;
-use rocket::State;
 use rocket::serde::json::Json;
+use rocket::State;
 
 use crate::database::connection::Db;
 
@@ -8,7 +8,6 @@ use crate::app::providers::constants::ROBOT_TOKEN_EXPIRATION;
 use crate::app::providers::guards::claims::AccessClaims;
 use crate::app::providers::services::claims::UserInClaims;
 use crate::app::providers::services::fetch::Fetch;
-
 
 use crate::app::modules::users::handlers::{create, index, show, update};
 use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
@@ -78,7 +77,7 @@ pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<User
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
-        "user"  => show::get_show_user(db, claims.0.user, id).await,
+        "user" => show::get_show_user(db, claims.0.user, id).await,
         _ => {
             println!("Error: get_show; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
@@ -140,7 +139,10 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(
-    fetch: &State<Fetch>, db: Db, claims: AccessClaims, new_user: Json<NewUserWithProject>
+    fetch: &State<Fetch>,
+    db: Db,
+    claims: AccessClaims,
+    new_user: Json<NewUserWithProject>,
 ) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,

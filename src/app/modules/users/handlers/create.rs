@@ -1,8 +1,8 @@
 // extern
 use rocket::http::Status;
-use rocket::State;
 use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
+use rocket::State;
 
 use crate::database::connection::Db;
 
@@ -17,15 +17,18 @@ use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserE
 use super::helper;
 
 // repositories
-use crate::app::modules::users::services::repository as user_repository;
-use crate::app::modules::user_project::services::repository as up_repository;
 use crate::app::modules::roles::services::repository as role_repository;
+use crate::app::modules::user_project::services::repository as up_repository;
+use crate::app::modules::users::services::repository as user_repository;
 
 pub async fn create_user(
-    fetch: &State<Fetch>, db: Db, user: UserInClaims, new_user: NewUserWithProject
+    fetch: &State<Fetch>,
+    db: Db,
+    user: UserInClaims,
+    new_user: NewUserWithProject,
 ) -> Result<Json<UserExpanded>, Status> {
     match helper::helper_role_validation(&db, &user, &new_user).await {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(e) => return Err(e),
     }
 
@@ -62,7 +65,10 @@ async fn helper_add_db(db: &Db, new_user: NewUser) -> Result<User, ()> {
 }
 
 async fn helper_redirections(
-    fetch: &State<Fetch>, db: &Db, project_id: i32, user: User
+    fetch: &State<Fetch>,
+    db: &Db,
+    project_id: i32,
+    user: User,
 ) -> Result<UserExpanded, Status> {
     let project = match PubProject::init_user(fetch, project_id, user.id).await {
         Ok(project) => project,
@@ -93,10 +99,10 @@ async fn helper_redirections(
 
     // agrega fcm
     match PubFcmToken::init_user(fetch, user.id).await {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(_) => return Err(Status::InternalServerError),
     }
-    
+
     // devuelve UserExtended
     let user_exp = UserExpanded {
         id: user.id,
@@ -106,8 +112,8 @@ async fn helper_redirections(
         active: user.active,
         project,
         created_at: user.created_at,
-        updated_at: user.updated_at
+        updated_at: user.updated_at,
     };
-    
+
     Ok(user_exp)
 }

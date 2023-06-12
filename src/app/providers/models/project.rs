@@ -18,11 +18,7 @@ pub struct PubProject {
 
 #[cfg(feature = "fetch")]
 impl PubProject {
-    pub async fn init_user(
-        fetch: &State<Fetch>,
-        project_id: i32,
-        user_id: i32,
-    ) -> Result<Self, Status> {
+    pub async fn init_user(fetch: &State<Fetch>, project_id: i32, user_id: i32) -> Result<Self, Status> {
         let robot_token = match Fetch::robot_token().await {
             Ok(token) => token,
             Err(_) => return Err(Status::InternalServerError),

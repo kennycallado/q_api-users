@@ -26,10 +26,7 @@ pub struct PubNewFcmToken {
 #[cfg(feature = "fetch")]
 impl PubFcmToken {
     pub async fn init_user(fetch: &State<Fetch>, user_id: i32) -> Result<Self, Status> {
-        let new_token = PubNewFcmToken {
-            user_id,
-            token: None,
-        };
+        let new_token = PubNewFcmToken { user_id, token: None };
 
         let robot_token = match Fetch::robot_token().await {
             Ok(token) => token,
