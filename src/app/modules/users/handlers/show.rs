@@ -1,12 +1,10 @@
-// extern
 use rocket::http::Status;
 use rocket::serde::json::Json;
 
-// app
-use crate::app::providers::interfaces::helpers::claims::UserInClaims;
-use crate::config::database::Db;
+use crate::database::connection::Db;
 
-// module
+use crate::app::providers::services::claims::UserInClaims;
+
 use crate::app::modules::users::model::{User, UserExpanded};
 
 use crate::app::modules::roles::services::repository as role_repository;

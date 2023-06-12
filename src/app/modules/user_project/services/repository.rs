@@ -1,11 +1,7 @@
 use diesel::prelude::*;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 use crate::database::schema::user_project;
-
-// Para petición a projects_api
-// use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
-// use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
 
 use crate::app::modules::user_project::model::{NewUserProject, UserProject};
 

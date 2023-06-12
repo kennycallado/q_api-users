@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 use crate::database::schema::roles;
 
 use crate::app::modules::roles::model::Role;

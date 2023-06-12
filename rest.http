@@ -28,7 +28,7 @@ GET http://localhost:8000/health
 # }}}
 
 ### auth bypass
-GET http://localhost:8003/auth/bypass/13
+GET http://localhost:8003/auth/bypass/1
 Accept: application/json
 
 # {{{ users
@@ -41,9 +41,9 @@ GET http://localhost:8051/api/v1/project/1
 Accept: application/json
 Authorization: Bearer 
 
-GET http://localhost:8000/api/v1/user/13
+GET http://localhost:8000/api/v1/user/7
 Accept: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIiLCJ1c2VyIjp7ImlkIjoxLCJkZXBlbmRzX29uIjoxLCJyb2xlIjp7ImlkIjoyLCJuYW1lIjoiY29vcmQifSwidXNlcl90b2tlbiI6ImFkbWluX3VzZXIifSwiaWF0IjoxNjg2NTcwODk3LCJleHAiOjE2ODcxNzU2OTd9.FVGxt_fBqoFzPJs8yYJ2veoC12XV3D1cqKPkIFEKkrc
 
 GET http://localhost:8000/api/v1/user/1/userinclaims
 Accept: application/json

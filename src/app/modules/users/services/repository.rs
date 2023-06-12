@@ -1,11 +1,8 @@
-// externs
 use diesel::prelude::*;
 
-// app
-use crate::config::database::Db;
+use crate::database::connection::Db;
 use crate::database::schema::users;
 
-// module
 use crate::app::modules::users::model::{NewUser, User};
 
 pub async fn get_all(db: &Db) -> Result<Vec<User>, diesel::result::Error> {

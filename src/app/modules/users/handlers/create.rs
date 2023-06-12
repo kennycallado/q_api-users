@@ -4,14 +4,13 @@ use rocket::State;
 use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 
-use crate::app::providers::interfaces::fcm::PubFcmToken;
-use crate::app::providers::interfaces::project::PubProject;
-use crate::app::providers::interfaces::helpers::claims::UserInClaims;
-use crate::app::providers::interfaces::helpers::fetch::Fetch;
+use crate::app::providers::models::fcm::PubFcmToken;
+use crate::app::providers::models::project::PubProject;
+use crate::app::providers::services::claims::UserInClaims;
+use crate::app::providers::services::fetch::Fetch;
 
-// module
 use crate::app::modules::user_project::model::NewUserProject;
 use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
 

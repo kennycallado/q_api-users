@@ -1,5 +1,5 @@
 use crate::app::providers::constants::ACCESS_TOKEN_EXPIRATION;
-use crate::app::providers::interfaces::helpers::claims::{Claims, RoleInClaims, UserInClaims};
+use crate::app::providers::services::claims::{Claims, RoleInClaims, UserInClaims};
 
 use crate::app::modules::users::model::UserExpanded;
 

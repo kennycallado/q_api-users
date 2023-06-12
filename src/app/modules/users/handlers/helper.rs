@@ -1,11 +1,9 @@
 use rocket::http::Status;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 
-// app
-use crate::app::providers::interfaces::helpers::claims::UserInClaims;
+use crate::app::providers::services::claims::UserInClaims;
 
-// module
 use crate::app::modules::users::model::NewUserWithProject;
 use crate::app::modules::users::services::repository as user_repository;
 

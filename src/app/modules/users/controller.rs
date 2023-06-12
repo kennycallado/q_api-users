@@ -2,12 +2,13 @@ use rocket::http::Status;
 use rocket::State;
 use rocket::serde::json::Json;
 
+use crate::database::connection::Db;
+
 use crate::app::providers::constants::ROBOT_TOKEN_EXPIRATION;
 use crate::app::providers::guards::claims::AccessClaims;
-use crate::app::providers::interfaces::helpers::claims::UserInClaims;
-use crate::app::providers::interfaces::helpers::fetch::Fetch;
+use crate::app::providers::services::claims::UserInClaims;
+use crate::app::providers::services::fetch::Fetch;
 
-use crate::config::database::Db;
 
 use crate::app::modules::users::handlers::{create, index, show, update};
 use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
