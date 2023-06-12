@@ -1,9 +1,14 @@
+#![allow(unused)]
+
 use rocket::{State, http::Status};
 use serde::{Deserialize, Serialize};
 
-use super::helpers::{fetch::Fetch, config_getter::ConfigGetter};
+use crate::app::providers::config_getter::ConfigGetter;
+
+#[cfg(feature = "fetch")]
+use crate::app::providers::services::fetch::Fetch;
  
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct PubFcmToken {
     pub id: i32,
@@ -11,13 +16,14 @@ pub struct PubFcmToken {
     pub token: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct PubNewFcmToken {
     pub user_id: i32,
     pub token: Option<String>,
 }
 
+#[cfg(feature = "fetch")]
 impl PubFcmToken {
     pub async fn init_user(fetch: &State<Fetch>, user_id: i32) -> Result<Self, Status> {
         let new_token = PubNewFcmToken {user_id, token: None};
@@ -27,8 +33,8 @@ impl PubFcmToken {
             Err(_) => return Err(Status::InternalServerError),
         };
 
-        let fcm_url = ConfigGetter::get_entity_url("fcm").unwrap_or("http://localhost:8005/api/v1/fcm".to_string())
-            + "/token";
+        let fcm_url = ConfigGetter::get_entity_url("fcm").unwrap_or("http://localhost:8005/api/v1/fcm/".to_string())
+            + "token";
 
         let client = fetch.client.lock().await;
         let res = client
