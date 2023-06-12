@@ -1,4 +1,4 @@
-mod constants;
+pub mod constants;
 pub mod cors;
 pub mod guards;
 pub mod models;
