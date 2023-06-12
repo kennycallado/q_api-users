@@ -78,7 +78,7 @@ pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<User
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
-        "user" => show::get_show_user(db, claims.0.user, id).await,
+        "user"  => show::get_show_user(db, claims.0.user, id).await,
         _ => {
             println!("Error: get_show; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
@@ -93,7 +93,6 @@ pub async fn get_show_none(_id: i32) -> Status {
 
 #[get("/<id>/userinclaims", rank = 1)]
 pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
-    // Check if the token is a robot token
     if claims.0.iat + ROBOT_TOKEN_EXPIRATION != claims.0.exp {
         return Err(Status::Unauthorized);
     }

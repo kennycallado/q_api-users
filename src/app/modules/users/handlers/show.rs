@@ -51,12 +51,10 @@ async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, 
 }
 
 pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
-    // get user
-    let user = user_repository::get_user_by_id(&db, id).await;
-    if let Err(_) = user {
-        return Err(Status::NotFound);
-    }
-    let user = user.unwrap();
+    let user = match user_repository::get_user_by_id(&db, id).await {
+        Ok(user) => user,
+        Err(_) => return Err(Status::NotFound),
+    };
 
     match user_expanded_constructor(&db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),

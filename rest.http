@@ -41,9 +41,9 @@ GET http://localhost:8051/api/v1/project/1
 Accept: application/json
 Authorization: Bearer 
 
-GET http://localhost:8000/api/v1/user/7
+GET http://localhost:8000/api/v1/user/1
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIiLCJ1c2VyIjp7ImlkIjoxLCJkZXBlbmRzX29uIjoxLCJyb2xlIjp7ImlkIjoyLCJuYW1lIjoiY29vcmQifSwidXNlcl90b2tlbiI6ImFkbWluX3VzZXIifSwiaWF0IjoxNjg2NTcwODk3LCJleHAiOjE2ODcxNzU2OTd9.FVGxt_fBqoFzPJs8yYJ2veoC12XV3D1cqKPkIFEKkrc
+Authorization: Bearer 
 
 GET http://localhost:8000/api/v1/user/1/userinclaims
 Accept: application/json
@@ -59,8 +59,8 @@ Authorization: Bearer
 Content-Type: application/json
 
 {
-  "depends_on": 18,
-  "role_id": 4,
+  "depends_on": 1,
+  "role_id": 2,
   "active": true,
   "project_id": 1
 }
