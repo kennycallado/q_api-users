@@ -2,9 +2,9 @@
 use crate::app::providers::services::cron::CronManager;
 
 #[cfg(feature = "db")]
-use rocket::fairing::AdHoc;
-#[cfg(feature = "db")]
 use crate::database::connection;
+#[cfg(feature = "db")]
+use rocket::fairing::AdHoc;
 
 #[cfg(feature = "fetch")]
 use crate::app::providers::services::fetch::Fetch;
