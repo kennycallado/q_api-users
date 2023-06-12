@@ -126,10 +126,10 @@ services:
   # # }}}
 # }}}
 
-# {{{ modules
-  # # {{{ modules
-  # modules_api:
-  #   image: kennycallado/q-api-modules:latest
+# {{{ slides
+  # # {{{ slides
+  # slides_api:
+  #   image: kennycallado/q-api-slides:latest
   #   ports:
   #     - "8021:8000"
   #   expose:
@@ -158,9 +158,9 @@ services:
   #     - ROCKET_PORT=8000
   #     - ROCKET_SECRET_KEY="dfxtad5cssdDtqL9zTgafWDuvo7VWYv3nDqDvEYkGQU="
   #     - ROCKET_DATABASES={questions={url="postgres://base:base@database/base"}}
-  #     - ROCKET_MODULE_URL="http://modules_api:8000/api/v1/module/"
+  #     - ROCKET_MODULE_URL="http://slides_api:8000/api/v1/module/"
   #   depends_on:
-  #     - modules_api
+  #     - slides_api
   # # }}}
   
   # # {{{ papers
