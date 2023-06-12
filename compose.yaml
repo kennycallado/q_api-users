@@ -158,7 +158,7 @@ services:
   #     - ROCKET_PORT=8000
   #     - ROCKET_SECRET_KEY=""
   #     - ROCKET_DATABASES={questions={url="postgres://base:base@database/base"}}
-  #     - ROCKET_MODULE_URL="http://slides_api:8000/api/v1/module/"
+  #     - ROCKET_SLIDE_URL="http://slides_api:8000/api/v1/slide/"
   #   depends_on:
   #     - slides_api
   # # }}}
