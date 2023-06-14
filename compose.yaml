@@ -190,6 +190,8 @@ services:
 #       - "3000:3000"
 #     expose:
 #       - "3000:3000"
+#    volumes:
+#      - "./SCRIPTS:/app/SCRIPTS"
 #   # }}}
 #   
 #   # {{{ logics
