@@ -17,7 +17,7 @@ fcm_url       = "http://localhost:8005/api/v1/fcm/"
 question_url  = "http://localhost:8011/api/v1/question/"
 answer_url    = "http://localhost:8012/api/v1/answer/"
 
-slides_url     = "http://localhost:8021/api/v1/slide/"
+slide_url     = "http://localhost:8021/api/v1/slide/"
 
 resource_url  = "http://localhost:8031/api/v1/resource/"
 paper_url     = "http://localhost:8032/api/v1/paper/"
