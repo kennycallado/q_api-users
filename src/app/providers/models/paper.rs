@@ -20,4 +20,5 @@ pub struct PubNewPaper {
     pub user_id: i32,
     pub project_id: i32,
     pub resource_id: i32,
+    pub completed: bool,
 }
