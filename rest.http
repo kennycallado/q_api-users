@@ -80,4 +80,14 @@ Content-Type: application/json
   "active": true
 }
 
+POST http://localhost:8000/api/v1/user/record
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "user_id": 2,
+  "record": { "step": 2, "mood": 65 }
+}
+
 # }}}
