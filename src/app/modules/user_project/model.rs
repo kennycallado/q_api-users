@@ -13,7 +13,7 @@ pub struct UserProject {
     pub user_id: i32,
     pub project_id: i32,
     pub keys: Vec<Option<String>>,
-    pub values: rocket::serde::json::Value,
+    pub record: rocket::serde::json::Value,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Insertable)]
@@ -24,5 +24,5 @@ pub struct NewUserProject {
     pub user_id: i32,
     pub project_id: i32,
     pub keys: Vec<Option<String>>,
-    pub values: rocket::serde::json::Value,
+    pub record: rocket::serde::json::Value,
 }
