@@ -2,6 +2,7 @@ use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::State;
 
+use crate::app::providers::models::record::PubNewRecord;
 use crate::database::connection::Db;
 
 use crate::app::providers::constants::ROBOT_TOKEN_EXPIRATION;
@@ -30,6 +31,8 @@ pub fn routes() -> Vec<rocket::Route> {
         post_create_none,
         put_update,
         put_update_none,
+        post_update_record,
+        post_update_record_none,
     ]
 }
 
@@ -180,5 +183,21 @@ pub async fn put_update(
 
 #[put("/<_id>", data = "<_new_user>", rank = 2)]
 pub async fn put_update_none(_id: i32, _new_user: Json<NewUser>) -> Status {
+    Status::Unauthorized
+}
+
+#[post("/record", data = "<new_record>", rank = 1)]
+pub async fn post_update_record(db: Db, claims: AccessClaims, new_record: Json<PubNewRecord>) -> Result<Status, Status> {
+    match claims.0.user.role.name.as_str() {
+        "admin" => update::post_update_record_admin(&db, claims.0.user, new_record.into_inner()).await,
+        _ => {
+            println!("Error: post_update_record; Role not handled {}", claims.0.user.role.name);
+            Err(Status::BadRequest)
+        }
+    }
+}
+
+#[post("/<_id>/record", data = "<_new_record>", rank = 2)]
+pub async fn post_update_record_none(_id: i32, _new_record: Json<PubNewRecord>) -> Status {
     Status::Unauthorized
 }

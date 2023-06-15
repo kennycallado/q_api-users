@@ -1,12 +1,14 @@
 use rocket::http::Status;
 use rocket::serde::json::Json;
 
+use crate::app::providers::models::record::PubNewRecord;
 use crate::database::connection::Db;
 
 use crate::app::providers::services::claims::UserInClaims;
 
 use crate::app::modules::users::model::{NewUser, User};
 use crate::app::modules::users::services::repository as user_repository;
+use crate::app::modules::user_project::services::repository as up_repository;
 
 pub async fn put_update_admin(
     db: Db,
@@ -105,6 +107,15 @@ pub async fn put_update_thera(
 
     match user {
         Ok(user) => Ok(Json(user)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
+pub async fn post_update_record_admin(db: &Db, _user: UserInClaims, new_record: PubNewRecord) -> Result<Status, Status> {
+    let record = up_repository::update_user_record(db, new_record).await;
+
+    match record {
+        Ok(_) => Ok(Status::Ok),
         Err(_) => Err(Status::InternalServerError),
     }
 }

@@ -3,6 +3,8 @@ use diesel::prelude::*;
 use crate::database::connection::Db;
 use crate::database::schema::user_project;
 
+use crate::app::providers::models::record::PubNewRecord;
+
 use crate::app::modules::user_project::model::{NewUserProject, UserProject};
 
 pub async fn get_user_project_by_user_id(
@@ -33,4 +35,17 @@ pub async fn create_user_project(
         .await;
 
     user_project
+}
+
+pub async fn update_user_record(db: &Db, new_record: PubNewRecord) -> Result<usize, diesel::result::Error> {
+    let result = db
+        .run(move |conn| {
+            diesel::update(user_project::table)
+                .filter(user_project::user_id.eq(new_record.user_id))
+                .set(user_project::record.eq(new_record.record))
+                .execute(conn)
+        })
+        .await;
+
+    result
 }
