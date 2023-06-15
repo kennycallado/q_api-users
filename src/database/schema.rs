@@ -13,7 +13,7 @@ diesel::table! {
         user_id -> Int4,
         project_id -> Int4,
         keys -> Array<Nullable<Text>>,
-        values -> Jsonb,
+        record -> Jsonb,
     }
 }
 
