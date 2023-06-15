@@ -1,7 +1,7 @@
 version: "3.1"
 
 # Replace secret_key:
-# 11,$s/SECRET_KEY=""/SECRET_KEY="V5npwf96V+EZxkjpbPTwhDjTHfk014hv1YOFScXkJvE="
+# 11,$s/SECRET_KEY=""/SECRET_KEY=""
 # 11,$s/SECRET_KEY="*.*"/SECRET_KEY=""
 #
 # Replace all the database credentials
