@@ -186,10 +186,11 @@ pub async fn put_update_none(_id: i32, _new_user: Json<NewUser>) -> Status {
     Status::Unauthorized
 }
 
-#[post("/record", data = "<new_record>", rank = 1)]
+#[patch("/record", data = "<new_record>", rank = 1)]
 pub async fn post_update_record(db: Db, claims: AccessClaims, new_record: Json<PubNewRecord>) -> Result<Status, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => update::post_update_record_admin(&db, claims.0.user, new_record.into_inner()).await,
+        "robot" => update::post_update_record_admin(&db, claims.0.user, new_record.into_inner()).await,
         _ => {
             println!("Error: post_update_record; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
@@ -197,7 +198,7 @@ pub async fn post_update_record(db: Db, claims: AccessClaims, new_record: Json<P
     }
 }
 
-#[post("/<_id>/record", data = "<_new_record>", rank = 2)]
-pub async fn post_update_record_none(_id: i32, _new_record: Json<PubNewRecord>) -> Status {
+#[patch("/record", data = "<_new_record>", rank = 2)]
+pub async fn post_update_record_none(_new_record: Json<PubNewRecord>) -> Status {
     Status::Unauthorized
 }
