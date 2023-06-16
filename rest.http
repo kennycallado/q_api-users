@@ -80,7 +80,7 @@ Content-Type: application/json
   "active": true
 }
 
-POST http://localhost:8000/api/v1/user/record
+PATCH http://localhost:8000/api/v1/user/record
 Accept: application/json
 Authorization: Bearer 
 Content-Type: application/json
