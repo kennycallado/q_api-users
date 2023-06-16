@@ -5,4 +5,5 @@ pub mod project;
 pub mod question;
 pub mod record;
 pub mod resource;
+pub mod record;
 pub mod slide;
