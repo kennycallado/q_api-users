@@ -169,7 +169,7 @@ services:
       - ROCKET_CHECKER_URL="http://checker_api:3000/checker/"
       - ROCKET_PROJECT_URL="http://projects_api:8000/api/v1/project/"
     depends_on:
-      - users_api
+      - database
   # }}}
 
   # {{{ answers
