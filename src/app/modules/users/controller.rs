@@ -21,6 +21,8 @@ pub fn routes() -> Vec<rocket::Route> {
         options_me,
         get_index,
         get_index_none,
+        get_index_records,
+        get_index_records_none,
         get_show,
         get_show_none,
         get_show_claims,
@@ -73,6 +75,24 @@ pub async fn get_index(db: Db, claims: AccessClaims) -> Result<Json<Vec<User>>, 
 pub async fn get_index_none() -> Status {
     Status::Unauthorized
 }
+
+#[get("/project/<project_id>/record", rank = 1)]
+pub async fn get_index_records(db: Db, claims: AccessClaims, project_id: i32) -> Result<Json<Vec<PubNewRecord>>, Status> {
+    match claims.0.user.role.name.as_str() {
+        "admin" => index::get_index_records(db, claims.0.user, project_id).await,
+        "robot" => index::get_index_records(db, claims.0.user, project_id).await,
+        _ => {
+            println!("Error: get_index_records; Role not handled {}", claims.0.user.role.name);
+            Err(Status::BadRequest)
+        }
+    }
+}
+
+#[get("/project/<_project_id>/record", rank = 2)]
+pub async fn get_index_records_none(_project_id: i32) -> Status {
+    Status::Unauthorized
+}
+
 
 #[get("/<id>", rank = 1)]
 pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
@@ -138,18 +158,6 @@ pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpand
 pub async fn get_show_me_none() -> Status {
     Status::Unauthorized
 }
-
-// #[get("/project/<project_id>/record", rank = 1)]
-// pub async fn get_show_record(db: Db, claims: AccessClaims, project_id: i32) -> Result<Json<PubRecord>, Status> {
-//     match claims.0.user.role.name.as_str() {
-//         "admin" => show::get_show_record_admin(db, claims.0.user, project_id).await,
-//         "robot" => show::get_show_record_admin(db, claims.0.user, project_id).await,
-//         _ => {
-//             println!("Error: get_show_record; Role not handled {}", claims.0.user.role.name);
-//             Err(Status::BadRequest)
-//         }
-//     }
-// }
 
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(

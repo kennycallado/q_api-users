@@ -3,9 +3,14 @@ use rocket::serde::json::Json;
 
 use crate::database::connection::Db;
 
+use crate::app::providers::models::record::{PubRecord, PubNewRecord};
 use crate::app::providers::services::claims::UserInClaims;
 
+use crate::app::modules::user_project::model::UserProject;
+
 use crate::app::modules::users::model::User;
+
+use crate::app::modules::user_project::services::repository as user_project_repository;
 use crate::app::modules::users::services::repository as user_repository;
 
 pub async fn get_index_admin(db: Db, _user: UserInClaims) -> Result<Json<Vec<User>>, Status> {
@@ -15,6 +20,28 @@ pub async fn get_index_admin(db: Db, _user: UserInClaims) -> Result<Json<Vec<Use
         Ok(users) => Ok(Json(users)),
         Err(_) => Err(Status::NotFound),
     }
+}
+
+pub async fn get_index_records(db: Db, _user: UserInClaims, project_id: i32) -> Result<Json<Vec<PubNewRecord>>, Status> {
+    let user_projects = user_project_repository::get_user_projects_active_user_project_by_project_id(&db, project_id).await;
+
+    match user_projects {
+        Ok(user_projects) => {
+            let mut records = Vec::new();
+            for up in user_projects {
+                let record = PubNewRecord {
+                    user_id: up.user_id,
+                    record: up.record,
+                };
+
+                records.push(record)
+            }
+
+            Ok(Json(records))
+        },
+        Err(_) => Err(Status::NotFound),
+    }
+
 }
 
 pub async fn get_index_coord(db: Db, user: UserInClaims) -> Result<Json<Vec<User>>, Status> {

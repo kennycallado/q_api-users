@@ -22,6 +22,22 @@ pub async fn get_user_project_by_user_id(
     user_project
 }
 
+pub async fn get_user_projects_active_user_project_by_project_id(
+    db: &Db,
+    project_id: i32,
+) -> Result<Vec<UserProject>, diesel::result::Error> {
+    let user_project = db
+        .run(move |conn| {
+            user_project::table
+                .filter(user_project::project_id.eq(project_id))
+                .filter(user_project::active.eq(true))
+                .load::<UserProject>(conn)
+        })
+        .await;
+
+    user_project
+}
+
 pub async fn create_user_project(
     db: &Db,
     new_user_project: NewUserProject,

@@ -6,48 +6,11 @@ use crate::database::connection::Db;
 use crate::app::providers::services::claims::UserInClaims;
 
 use crate::app::modules::users::model::{User, UserExpanded};
+use crate::app::modules::users::handlers::helper;
 
 use crate::app::modules::roles::services::repository as role_repository;
 use crate::app::modules::user_project::services::repository as user_project_repository;
 use crate::app::modules::users::services::repository as user_repository;
-
-async fn user_expanded_constructor(db: &Db, user: User) -> Result<UserExpanded, Status> {
-    // get depends_on
-    let depends_on = user_repository::get_user_by_id(&db, user.depends_on).await;
-    if let Err(_) = depends_on {
-        return Err(Status::NotFound);
-    }
-    let depends_on = depends_on.unwrap();
-
-    // get role
-    let role = role_repository::get_role_by_id(&db, user.role_id).await;
-    if let Err(_) = role {
-        return Err(Status::NotFound);
-    }
-    let role = role.unwrap();
-
-    // get user_project
-    let user_project = match user_project_repository::get_user_project_by_user_id(&db, user.id).await {
-        Ok(user_project) => user_project,
-        Err(e) => {
-            println!("Error: {}", e);
-            return Err(Status::InternalServerError);
-        }
-    };
-
-    // build the user_expanded
-    let user_expanded = UserExpanded {
-        id: user.id,
-        role,
-        depends_on,
-        user_token: user.user_token,
-        project: user_project,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-    };
-
-    Ok(user_expanded)
-}
 
 pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     let user = match user_repository::get_user_by_id(&db, id).await {
@@ -55,9 +18,12 @@ pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Jso
         Err(_) => return Err(Status::NotFound),
     };
 
-    match user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(&db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
-        Err(status) => Err(status),
+        Err(e) => {
+            println!("Error: {}", e);
+            Err(Status::InternalServerError)
+        },
     }
 }
 
@@ -101,9 +67,12 @@ pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json
         _ => return Err(Status::Unauthorized),
     }
 
-    match user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(&db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
-        Err(status) => Err(status),
+        Err(e) => {
+            println!("Error: {}", e);
+            Err(Status::InternalServerError)
+        },
     }
 }
 
@@ -132,9 +101,12 @@ pub async fn get_show_thera(db: Db, thera: UserInClaims, id: i32) -> Result<Json
         _ => return Err(Status::Unauthorized),
     }
 
-    match user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(&db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
-        Err(status) => Err(status),
+        Err(e) => {
+            println!("Error: {}", e);
+            Err(Status::InternalServerError)
+        },
     }
 }
 
@@ -150,18 +122,24 @@ pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result
         return Err(Status::Unauthorized);
     }
 
-    match user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(&db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
-        Err(status) => Err(status),
+        Err(e) => {
+            println!("Error: {}", e);
+            Err(Status::InternalServerError)
+        },
     }
 }
 
 // Should check or update the user_token?
 pub async fn get_show_robot(db: Db, _robot: UserInClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
     let user = match user_repository::get_user_by_id(&db, id).await {
-        Ok(user) => match user_expanded_constructor(&db, user).await {
+        Ok(user) => match helper::user_expanded_constructor(&db, user).await {
             Ok(user_expanded) => Ok(Json(user_expanded.into())),
-            Err(status) => Err(status),
+            Err(e) => {
+                println!("Error: {}", e);
+                Err(Status::InternalServerError)
+            },
         },
         Err(_) => return Err(Status::NotFound),
     };
