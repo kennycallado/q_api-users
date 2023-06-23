@@ -16,7 +16,6 @@ pub struct User {
     pub depends_on: i32,
     pub role_id: i32,
     pub user_token: Option<String>,
-    pub active: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -31,7 +30,6 @@ pub struct UserExpanded {
     pub depends_on: User,
     pub role: Role,
     pub user_token: Option<String>,
-    pub active: bool,
     pub project: UserProject,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
@@ -44,7 +42,6 @@ pub struct UserExpanded {
 pub struct NewUser {
     pub depends_on: i32,
     pub role_id: i32,
-    pub active: bool,
 }
 
 impl From<User> for NewUser {
@@ -52,7 +49,6 @@ impl From<User> for NewUser {
         NewUser {
             depends_on: user.depends_on,
             role_id: user.role_id,
-            active: user.active,
         }
     }
 }
@@ -62,7 +58,6 @@ impl From<NewUserWithProject> for NewUser {
         NewUser {
             depends_on: user.depends_on,
             role_id: user.role_id,
-            active: user.active,
         }
     }
 }
@@ -72,6 +67,5 @@ impl From<NewUserWithProject> for NewUser {
 pub struct NewUserWithProject {
     pub depends_on: i32,
     pub role_id: i32,
-    pub active: bool,
     pub project_id: i32,
 }

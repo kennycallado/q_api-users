@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::State;
 
-use crate::app::providers::models::record::PubNewRecord;
+use crate::app::providers::models::record::{PubNewRecord, PubRecord};
 use crate::database::connection::Db;
 
 use crate::app::providers::constants::ROBOT_TOKEN_EXPIRATION;
@@ -111,16 +111,20 @@ pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Js
     }
 }
 
+#[get("/<_id>/userinclaims", rank = 2)]
+pub async fn get_show_claims_none(_id: i32) -> Status {
+    Status::Unauthorized
+}
+
 #[get("/me", rank = 2)]
 pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpanded>, Status> {
     let id = claims.0.user.id;
 
     match show::get_show_admin(db, claims.0.user, id).await {
         Ok(user) => {
-            if user.active {
-                Ok(user)
-            } else {
-                Err(Status::Unauthorized)
+            match user.user_token {
+                Some(_) => Ok(user),
+                None => Err(Status::Unauthorized),
             }
         }
         Err(_) => {
@@ -135,10 +139,17 @@ pub async fn get_show_me_none() -> Status {
     Status::Unauthorized
 }
 
-#[get("/<_id>/userinclaims", rank = 2)]
-pub async fn get_show_claims_none(_id: i32) -> Status {
-    Status::Unauthorized
-}
+// #[get("/project/<project_id>/record", rank = 1)]
+// pub async fn get_show_record(db: Db, claims: AccessClaims, project_id: i32) -> Result<Json<PubRecord>, Status> {
+//     match claims.0.user.role.name.as_str() {
+//         "admin" => show::get_show_record_admin(db, claims.0.user, project_id).await,
+//         "robot" => show::get_show_record_admin(db, claims.0.user, project_id).await,
+//         _ => {
+//             println!("Error: get_show_record; Role not handled {}", claims.0.user.role.name);
+//             Err(Status::BadRequest)
+//         }
+//     }
+// }
 
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(
