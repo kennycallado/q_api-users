@@ -14,7 +14,7 @@ diesel::table! {
         project_id -> Int4,
         active -> Bool,
         keys -> Array<Nullable<Text>>,
-        record -> Jsonb,
+        record -> Nullable<Jsonb>,
     }
 }
 

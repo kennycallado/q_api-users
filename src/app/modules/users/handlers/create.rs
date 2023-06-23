@@ -78,8 +78,9 @@ async fn helper_redirections(
     let new_user_project = NewUserProject {
         user_id: user.id,
         project_id: project.id,
+        active: None,
         keys: project.keys,
-        record: rocket::serde::json::Value::String("{}".to_string()),
+        record: None,
     };
 
     let project = match up_repository::create_user_project(&db, new_user_project).await {
@@ -109,7 +110,6 @@ async fn helper_redirections(
         depends_on,
         role,
         user_token: user.user_token,
-        active: user.active,
         project,
         created_at: user.created_at,
         updated_at: user.updated_at,
