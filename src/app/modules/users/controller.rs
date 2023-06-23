@@ -35,6 +35,8 @@ pub fn routes() -> Vec<rocket::Route> {
         put_update_none,
         post_update_record,
         post_update_record_none,
+        get_update_toggle_active,
+        get_update_toggle_active_none,
     ]
 }
 
@@ -219,5 +221,22 @@ pub async fn post_update_record(db: Db, claims: AccessClaims, new_record: Json<P
 
 #[patch("/record", data = "<_new_record>", rank = 2)]
 pub async fn post_update_record_none(_new_record: Json<PubNewRecord>) -> Status {
+    Status::Unauthorized
+}
+
+#[get("/<id>/project/toggle", rank = 1)]
+pub async fn get_update_toggle_active(db: Db, claims: AccessClaims, id: i32) -> Result<Status, Status> {
+    match claims.0.user.role.name.as_str() {
+        "admin" => update::get_udpate_user_toggle_active(&db, claims.0.user, id).await,
+        "robot" => update::get_udpate_user_toggle_active(&db, claims.0.user, id).await,
+        _ => {
+            println!("Error: get_update_toggle_active; Role not handled {}", claims.0.user.role.name);
+            Err(Status::BadRequest)
+        }
+    }
+}
+
+#[get("/<_id>/project/toggle", rank = 2)]
+pub async fn get_update_toggle_active_none(_id: i32) -> Status {
     Status::Unauthorized
 }

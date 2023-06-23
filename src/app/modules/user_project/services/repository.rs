@@ -65,3 +65,16 @@ pub async fn update_user_record(db: &Db, new_record: PubNewRecord) -> Result<usi
 
     result
 }
+
+pub async fn toggle_active(db: &Db, user_id: i32) -> Result<usize, diesel::result::Error> {
+    let result = db
+        .run(move |conn| {
+            diesel::update(user_project::table)
+                .filter(user_project::user_id.eq(user_id))
+                .set(user_project::active.eq(diesel::dsl::not(user_project::active)))
+                .execute(conn)
+        })
+        .await;
+
+    result
+}

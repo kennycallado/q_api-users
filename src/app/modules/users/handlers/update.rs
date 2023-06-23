@@ -119,3 +119,15 @@ pub async fn post_update_record_admin(db: &Db, _user: UserInClaims, new_record: 
         Err(_) => Err(Status::InternalServerError),
     }
 }
+
+pub async fn get_udpate_user_toggle_active(db: &Db, _user: UserInClaims, user_id: i32 ) -> Result<Status, Status> {
+    let res = up_repository::toggle_active(db, user_id).await;
+
+    match res {
+        Ok(_) => Ok(Status::Ok),
+        Err(_) => {
+            println!("Error updating user active");
+            Err(Status::InternalServerError)
+        },
+    }
+}
