@@ -90,4 +90,15 @@ Content-Type: application/json
   "record": { "step": 2, "mood": 65 }
 }
 
+
+GET http://localhost:8000/api/v1/user/2/project/toggle
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+GET http://localhost:8000/api/v1/user/project/1/record
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
 # }}}
