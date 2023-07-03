@@ -15,10 +15,7 @@ use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserE
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
-        options_index,
-        options_show,
-        options_claims,
-        options_me,
+        options_all,
         get_index,
         get_index_none,
         get_index_records,
@@ -40,23 +37,8 @@ pub fn routes() -> Vec<rocket::Route> {
     ]
 }
 
-#[options("/")]
-pub async fn options_index() -> Status {
-    Status::Ok
-}
-
-#[options("/<_id>")]
-pub async fn options_show(_id: i32) -> Status {
-    Status::Ok
-}
-
-#[options("/<_id>/userinclaims")]
-pub async fn options_claims(_id: i32) -> Status {
-    Status::Ok
-}
-
-#[options("/me")]
-pub async fn options_me() -> Status {
+#[options("/<_..>")]
+pub fn options_all() -> Status {
     Status::Ok
 }
 
