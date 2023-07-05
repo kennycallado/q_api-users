@@ -67,5 +67,6 @@ impl From<NewUserWithProject> for NewUser {
 pub struct NewUserWithProject {
     pub depends_on: i32,
     pub role_id: i32,
+    pub active: Option<bool>,
     pub project_id: i32,
 }

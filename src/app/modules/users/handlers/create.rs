@@ -25,17 +25,17 @@ pub async fn create_user(
     fetch: &State<Fetch>,
     db: Db,
     user: UserInClaims,
-    new_user: NewUserWithProject,
-) -> Result<Json<UserExpanded>, Status> {
+    new_user: NewUserWithProject) -> Result<Json<UserExpanded>, Status> {
     match helper::helper_role_validation(&db, &user, &new_user).await {
         Ok(_) => {}
         Err(e) => return Err(e),
     }
 
     let project_id = new_user.project_id;
+    let active = new_user.active;
 
     let user = match helper_add_db(&db, new_user.into()).await {
-        Ok(user) => match helper_redirections(fetch, &db, project_id, user).await {
+        Ok(user) => match helper_redirections(fetch, &db, project_id, active, user).await {
             Ok(user_exp) => user_exp,
             Err(e) => return Err(e),
         },
@@ -68,8 +68,8 @@ async fn helper_redirections(
     fetch: &State<Fetch>,
     db: &Db,
     project_id: i32,
-    user: User,
-) -> Result<UserExpanded, Status> {
+    active: Option<bool>,
+    user: User) -> Result<UserExpanded, Status> {
     let project = match PubProject::init_user(fetch, project_id, user.id).await {
         Ok(project) => project,
         Err(e) => return Err(e),
@@ -78,7 +78,7 @@ async fn helper_redirections(
     let new_user_project = NewUserProject {
         user_id: user.id,
         project_id: project.id,
-        active: None,
+        active,
         keys: project.keys,
         record: None,
     };
