@@ -17,6 +17,7 @@ pub async fn helper_role_validation(
 ) -> Result<(), Status> {
     match user.role.name.as_str() {
         "admin" => Ok(()),
+        "robot" => Ok(()),
         "coord" => {
             if new_user.role_id <= user.role.id {
                 return Err(Status::Unauthorized);
