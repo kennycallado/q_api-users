@@ -78,13 +78,13 @@ pub async fn get_index_records_none(_project_id: i32) -> Status {
 }
 
 
-#[get("/<id>", rank = 1)]
+#[get("/<id>", rank = 101)]
 pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
         "thera" => show::get_show_thera(db, claims.0.user, id).await,
-        "user" => show::get_show_user(db, claims.0.user, id).await,
+        "user"  => show::get_show_user(db, claims.0.user, id).await,
         _ => {
             println!("Error: get_show; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
@@ -92,7 +92,7 @@ pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<User
     }
 }
 
-#[get("/<_id>", rank = 3)]
+#[get("/<_id>", rank = 102)]
 pub async fn get_show_none(_id: i32) -> Status {
     Status::Unauthorized
 }
@@ -120,7 +120,7 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
     Status::Unauthorized
 }
 
-#[get("/me", rank = 2)]
+#[get("/me", rank = 1)]
 pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpanded>, Status> {
     let id = claims.0.user.id;
 
@@ -138,7 +138,7 @@ pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpand
     }
 }
 
-#[get("/me", rank = 4)]
+#[get("/me", rank = 2)]
 pub async fn get_show_me_none() -> Status {
     Status::Unauthorized
 }
@@ -152,6 +152,7 @@ pub async fn post_create(
 ) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
+        "robot" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
         "coord" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
         "thera" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
         _ => {
