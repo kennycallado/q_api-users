@@ -51,7 +51,7 @@ plan:
         Accept: application/json
         Authorization: Bearer {{ TOKEN }}
         Content-Type: application/json
-      body: '{ "depends_on": 1, "role_id": 2, "active": false, "project_id": 1 }'
+      body: '{ "depends_on": 1, "role_id": 2, "project_id": 1 }'
     tags: [ post ]
 
   - name: Get Index user
