@@ -334,7 +334,6 @@ services:
     depends_on:
       - checker_api
       - projects_api
-      - users_api
 
   logics-cron_api:
     image: kennycallado/q-api-logics:latest
