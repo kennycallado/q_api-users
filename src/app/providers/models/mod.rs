@@ -1,8 +1,9 @@
 pub mod answer;
-pub mod fcm;
+pub mod message;
 pub mod paper;
 pub mod project;
 pub mod question;
 pub mod record;
 pub mod resource;
 pub mod slide;
+pub mod user;

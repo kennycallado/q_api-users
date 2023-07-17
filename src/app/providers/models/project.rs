@@ -4,7 +4,6 @@ use rocket::{http::Status, State};
 use serde::{Deserialize, Serialize};
 
 use crate::app::providers::config_getter::ConfigGetter;
-
 use crate::app::providers::models::record::{PubNewRecord, PubRecord};
 
 #[cfg(feature = "fetch")]
@@ -90,3 +89,11 @@ impl PubProject {
     }
 }
 
+#[derive(Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct PubProjectWithRecords {
+    pub id: i32,
+    pub name: String,
+    pub keys: Vec<Option<String>>,
+    pub records: Option<Vec<PubRecord>>,
+}
