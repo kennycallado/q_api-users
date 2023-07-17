@@ -6,7 +6,7 @@ use rocket::State;
 
 use crate::database::connection::Db;
 
-use crate::app::providers::models::fcm::PubFcmToken;
+use crate::app::providers::models::message::PubToken;
 use crate::app::providers::models::project::PubProject;
 use crate::app::providers::services::claims::UserInClaims;
 use crate::app::providers::services::fetch::Fetch;
@@ -98,8 +98,8 @@ async fn helper_redirections(
         Err(_) => return Err(Status::InternalServerError),
     };
 
-    // agrega fcm
-    match PubFcmToken::init_user(fetch, user.id).await {
+    // inicia user en message
+    match PubToken::init_user(fetch, user.id).await {
         Ok(_) => {}
         Err(_) => return Err(Status::InternalServerError),
     }
