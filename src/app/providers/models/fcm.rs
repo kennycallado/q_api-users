@@ -26,16 +26,20 @@ pub struct PubNewFcmToken {
 #[cfg(feature = "fetch")]
 impl PubFcmToken {
     pub async fn init_user(fetch: &State<Fetch>, user_id: i32) -> Result<Self, Status> {
-        let new_token = PubNewFcmToken { user_id, token: None };
+        #[derive(Serialize)]
+        struct NewToken { user_id: i32, web_token: Option<String>, fcm_token: Option<String> }
+
+        let new_token = NewToken { user_id, web_token: None, fcm_token: None };
 
         let robot_token = match Fetch::robot_token().await {
             Ok(token) => token,
             Err(_) => return Err(Status::InternalServerError),
         };
 
-        let fcm_url = ConfigGetter::get_entity_url("fcm")
-            .unwrap_or("http://localhost:8005/api/v1/fcm/".to_string())
-            + "token";
+        // let fcm_url = ConfigGetter::get_entity_url("fcm")
+        //     .unwrap_or("http://localhost:8005/api/v1/fcm/".to_string())
+        //     + "token";
+        let fcm_url = "https://questions.kennycallado.dev/api/v1/messaging/token/";
 
         let client = fetch.client.lock().await;
         let res = client
