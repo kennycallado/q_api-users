@@ -18,7 +18,7 @@ use tokio_cron_scheduler::{Job, JobScheduler, JobSchedulerError};
 use diesel::{PgConnection, ConnectionError};
 #[cfg(feature = "db")]
 use diesel::prelude::*;
-#[cfg(feature = "db")]
+#[cfg(feature = "cron")]
 use crate::database::schema::cronjobs;
 
 #[cfg(feature = "cron")]
