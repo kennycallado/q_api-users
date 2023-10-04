@@ -53,6 +53,7 @@ impl CronManager {
             Some(pool) => pool.clone(),
             None => return rocket,
         };
+
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(5))
             .build()
