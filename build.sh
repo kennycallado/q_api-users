@@ -29,8 +29,9 @@ chmod -R o+w target
 docker run --rm -it \
   -v $HOME/.cargo/git:/home/rust/.cargo/git \
   -v $HOME/.cargo/registry:/home/rust/.cargo/registry \
-  -v "$(pwd)":/home/rust/src nasqueron/rust-musl-builder \
+  -v "$(pwd)":/volume clux/muslrust:stable \
   cargo build --release 
+  # -v "$(pwd)":/home/rust/src nasqueron/rust-musl-builder \
 #   # sudo chown -R rust:rust \
 #   # /home/rust/.cargo/git /home/rust/.cargo/registry /home/rust/src/target \
 
