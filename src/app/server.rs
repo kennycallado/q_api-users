@@ -1,10 +1,13 @@
 #[cfg(feature = "cron")]
 use crate::app::providers::services::cron::CronManager;
 
-#[cfg(feature = "db")]
+#[cfg(any(feature = "db", feature = "db_sqlx"))]
 use crate::database::connection;
-#[cfg(feature = "db")]
+#[cfg(any(feature = "db", feature = "db_sqlx"))]
 use rocket::fairing::AdHoc;
+
+#[cfg(feature = "db_sqlx")]
+use rocket_db_pools::Database;
 
 #[cfg(feature = "fetch")]
 use crate::app::providers::services::fetch::Fetch;
@@ -24,7 +27,17 @@ pub async fn rocket() -> _ {
         rocket_build = rocket_build
             .attach(connection::Db::fairing())
             .attach(AdHoc::on_ignite(
-                "Diesel Migrations",
+                "Running Migrations",
+                connection::run_migrations,
+            ));
+    }
+
+    #[cfg(feature = "db_sqlx")]
+    {
+        rocket_build = rocket_build
+            .attach(connection::Db::init())
+            .attach(AdHoc::on_ignite(
+                "Running Migrations",
                 connection::run_migrations,
             ));
     }

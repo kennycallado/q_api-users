@@ -6,8 +6,8 @@ mod database;
 #[cfg(test)]
 mod test;
 
+#[cfg(feature = "db")]
 extern crate openssl;
-
 #[cfg(feature = "db")]
 #[macro_use]
 extern crate diesel;
@@ -16,6 +16,7 @@ extern crate diesel;
 extern crate diesel_migrations;
 #[cfg(feature = "db")]
 extern crate rocket_sync_db_pools;
+
 #[macro_use]
 extern crate rocket;
 

@@ -1,7 +1,10 @@
-#[cfg(feature = "db")]
 use rocket::{Build, Rocket};
+
 #[cfg(feature = "db")]
 use rocket_sync_db_pools::{database, diesel};
+
+#[cfg(feature = "db_sqlx")]
+use rocket_db_pools::{sqlx, Connection, Database};
 
 #[cfg(feature = "db")]
 #[database("questions")]
@@ -21,6 +24,22 @@ pub async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
                 .expect("ERROR: database.run_migrations(); diesel migrations");
         })
         .await;
+
+    rocket
+}
+
+#[cfg(feature = "db_sqlx")]
+#[derive(Database)]
+#[database("questions")]
+pub struct Db(sqlx::PgPool);
+
+#[cfg(feature = "db_sqlx")]
+pub async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
+    let db = Db::fetch(&rocket).expect("ERROR: database.run_migrations(); database connection");
+    sqlx::migrate!("./src/database/migrations")
+        .run(&**db)
+        .await
+        .expect("ERROR: database.run_migrations(); sqlx migrations");
 
     rocket
 }
