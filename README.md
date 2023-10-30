@@ -33,6 +33,19 @@ sqlx migrate run --source ./src/database/migrations/
  cargo sqlx prepare
 ```
 
+- update features
+
+En general...
+``` rust
+// old
+#[cfg(feature = "db")]
+// new
+#[cfg(feature = "db_diesel")]
+```
+En los que usen sqlx
+``` rust
+#[cfg(feature = "db_sqlx")]
+```
 
 ## Changelog
 
