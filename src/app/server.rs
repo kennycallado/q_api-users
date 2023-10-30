@@ -1,9 +1,9 @@
 #[cfg(feature = "cron")]
 use crate::app::providers::services::cron::CronManager;
 
-#[cfg(any(feature = "db", feature = "db_sqlx"))]
+#[cfg(any(feature = "db_diesel", feature = "db_sqlx"))]
 use crate::database::connection;
-#[cfg(any(feature = "db", feature = "db_sqlx"))]
+#[cfg(any(feature = "db_diesel", feature = "db_sqlx"))]
 use rocket::fairing::AdHoc;
 
 #[cfg(feature = "db_sqlx")]
@@ -22,7 +22,7 @@ pub async fn rocket() -> _ {
     #[allow(unused_mut)]
     let mut rocket_build = rocket::build();
 
-    #[cfg(feature = "db")]
+    #[cfg(feature = "db_diesel")]
     {
         rocket_build = rocket_build
             .attach(connection::Db::fairing())

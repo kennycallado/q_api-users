@@ -1,16 +1,16 @@
 use rocket::{Build, Rocket};
 
-#[cfg(feature = "db")]
+#[cfg(feature = "db_diesel")]
 use rocket_sync_db_pools::{database, diesel};
 
 #[cfg(feature = "db_sqlx")]
 use rocket_db_pools::{sqlx, Connection, Database};
 
-#[cfg(feature = "db")]
+#[cfg(feature = "db_diesel")]
 #[database("questions")]
 pub struct Db(diesel::PgConnection);
 
-#[cfg(feature = "db")]
+#[cfg(feature = "db_diesel")]
 pub async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
     use diesel_migrations::{EmbeddedMigrations, MigrationHarness};
 
