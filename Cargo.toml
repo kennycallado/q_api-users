@@ -13,9 +13,9 @@ fetch     = ["reqwest", "openssl/vendored"]
 push      = ["web-push-native", "base64ct", "hyper", "hyper-rustls"]
 
 [profile.release]
-lto = true
+lto       = true
 opt-level = 3
-strip = true
+strip     = true
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
