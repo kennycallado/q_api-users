@@ -1718,29 +1718,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "package-name"
-version = "0.1.6"
-dependencies = [
- "base64ct",
- "chrono",
- "diesel",
- "diesel_migrations",
- "escalon-jobs",
- "hyper",
- "hyper-rustls",
- "jsonwebtoken",
- "openssl",
- "reqwest",
- "rocket",
- "rocket_db_pools",
- "rocket_sync_db_pools",
- "serde",
- "sqlx",
- "tokio-cron-scheduler",
- "web-push-native",
-]
-
-[[package]]
 name = "parking_lot"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1962,6 +1939,30 @@ dependencies = [
  "syn 2.0.38",
  "version_check",
  "yansi 1.0.0-rc.1",
+]
+
+[[package]]
+name = "q-api-users"
+version = "0.1.6"
+dependencies = [
+ "base64ct",
+ "chrono",
+ "diesel",
+ "diesel_migrations",
+ "escalon-jobs",
+ "hyper",
+ "hyper-rustls",
+ "jsonwebtoken",
+ "openssl",
+ "reqwest",
+ "rocket",
+ "rocket_db_pools",
+ "rocket_sync_db_pools",
+ "serde",
+ "sqlx",
+ "tokio-cron-scheduler",
+ "uuid",
+ "web-push-native",
 ]
 
 [[package]]
