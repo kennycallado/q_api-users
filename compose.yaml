@@ -343,7 +343,7 @@ services:
       - ROCKET_ADDRESS="0.0.0.0"
       - ROCKET_PORT=8000
       - ROCKET_SECRET_KEY=""
-      - ROCKET_DATABASES={questions={url="postgres://base:base@database/base"}}
+      - ROCKET_DATABASES={questions={url="postgres://users:users@database/users"}}
 
       - ROCKET_PROFILE_URL="http://profiles_api:8000/api/v1/profile/"
       - ROCKET_USER_URL="http://users_api:8000/api/v1/user/"
