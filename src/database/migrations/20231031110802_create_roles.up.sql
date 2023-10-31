@@ -12,6 +12,3 @@ INSERT INTO roles (name) VALUES
   ('robot'),
   ('guest') ON CONFLICT DO NOTHING
   ;
-
--- CREATE PUBLICATION roles_pub FOR TABLE roles;
--- ALTER TABLE roles REPLICA IDENTITY FULL;
