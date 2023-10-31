@@ -1943,7 +1943,7 @@ dependencies = [
 
 [[package]]
 name = "q-api-users"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "base64ct",
  "chrono",
