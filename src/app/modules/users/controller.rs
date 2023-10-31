@@ -43,7 +43,7 @@ pub fn options_all() -> Status {
 }
 
 #[get("/", rank = 1)]
-pub async fn get_index(db: Db, claims: AccessClaims) -> Result<Json<Vec<User>>, Status> {
+pub async fn get_index(db: &Db, claims: AccessClaims) -> Result<Json<Vec<User>>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => index::get_index_admin(db, claims.0.user).await,
         "coord" => index::get_index_coord(db, claims.0.user).await,
@@ -61,9 +61,9 @@ pub async fn get_index_none() -> Status {
 }
 
 #[get("/project/<project_id>/record", rank = 1)]
-pub async fn get_index_records(db: Db, claims: AccessClaims, project_id: i32) -> Result<Json<Vec<PubNewRecord>>, Status> {
+pub async fn get_index_records(db: &Db, claims: AccessClaims, project_id: i32) -> Result<Json<Vec<PubNewRecord>>, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => index::get_index_records(db, claims.0.user, project_id).await,
+        "admin" |
         "robot" => index::get_index_records(db, claims.0.user, project_id).await,
         _ => {
             println!("Error: get_index_records; Role not handled {}", claims.0.user.role.name);
@@ -79,7 +79,7 @@ pub async fn get_index_records_none(_project_id: i32) -> Status {
 
 
 #[get("/<id>", rank = 101)]
-pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show(db: &Db, claims: AccessClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(db, claims.0.user, id).await,
         "coord" => show::get_show_coord(db, claims.0.user, id).await,
@@ -98,7 +98,7 @@ pub async fn get_show_none(_id: i32) -> Status {
 }
 
 #[get("/<id>/userinclaims", rank = 1)]
-pub async fn get_show_claims(db: Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
+pub async fn get_show_claims(db: &Db, claims: AccessClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
     if claims.0.iat + ROBOT_TOKEN_EXPIRATION != claims.0.exp {
         return Err(Status::Unauthorized);
     }
@@ -121,7 +121,7 @@ pub async fn get_show_claims_none(_id: i32) -> Status {
 }
 
 #[get("/me", rank = 1)]
-pub async fn get_show_me(db: Db, claims: AccessClaims) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_me(db: &Db, claims: AccessClaims) -> Result<Json<UserExpanded>, Status> {
     let id = claims.0.user.id;
 
     match show::get_show_admin(db, claims.0.user, id).await {
@@ -146,14 +146,14 @@ pub async fn get_show_me_none() -> Status {
 #[post("/", data = "<new_user>", rank = 1)]
 pub async fn post_create(
     fetch: &State<Fetch>,
-    db: Db,
+    db: &Db,
     claims: AccessClaims,
     new_user: Json<NewUserWithProject>,
 ) -> Result<Json<UserExpanded>, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
-        "robot" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
-        "coord" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
+        "admin" |
+        "robot" |
+        "coord" |
         "thera" => create::create_user(fetch, db, claims.0.user, new_user.into_inner()).await,
         _ => {
             println!("Error: post_create; Role not handled {}", claims.0.user.role.name);
@@ -169,7 +169,7 @@ pub async fn post_create_none(_new_user: Json<NewUser>) -> Status {
 
 #[put("/<id>", data = "<new_user>", rank = 1)]
 pub async fn put_update(
-    db: Db,
+    db: &Db,
     claims: AccessClaims,
     id: i32,
     new_user: Json<NewUser>,
@@ -191,10 +191,10 @@ pub async fn put_update_none(_id: i32, _new_user: Json<NewUser>) -> Status {
 }
 
 #[patch("/record", data = "<new_record>", rank = 1)]
-pub async fn post_update_record(db: Db, claims: AccessClaims, new_record: Json<PubNewRecord>) -> Result<Status, Status> {
+pub async fn post_update_record(db: &Db, claims: AccessClaims, new_record: Json<PubNewRecord>) -> Result<Status, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => update::post_update_record_admin(&db, claims.0.user, new_record.into_inner()).await,
-        "robot" => update::post_update_record_admin(&db, claims.0.user, new_record.into_inner()).await,
+        "admin" |
+        "robot" => update::post_update_record_admin(db, claims.0.user, new_record.into_inner()).await,
         _ => {
             println!("Error: post_update_record; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)
@@ -208,10 +208,10 @@ pub async fn post_update_record_none(_new_record: Json<PubNewRecord>) -> Status 
 }
 
 #[get("/<id>/project/toggle", rank = 1)]
-pub async fn get_update_toggle_active(db: Db, claims: AccessClaims, id: i32) -> Result<Status, Status> {
+pub async fn get_update_toggle_active(db: &Db, claims: AccessClaims, id: i32) -> Result<Status, Status> {
     match claims.0.user.role.name.as_str() {
-        "admin" => update::get_udpate_user_toggle_active(&db, claims.0.user, id).await,
-        "robot" => update::get_udpate_user_toggle_active(&db, claims.0.user, id).await,
+        "admin" |
+        "robot" => update::get_udpate_user_toggle_active(db, claims.0.user, id).await,
         _ => {
             println!("Error: get_update_toggle_active; Role not handled {}", claims.0.user.role.name);
             Err(Status::BadRequest)

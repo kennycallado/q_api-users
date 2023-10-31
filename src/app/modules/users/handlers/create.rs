@@ -1,20 +1,20 @@
-// extern
 use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
 use rocket::State;
 
-use crate::database::connection::Db;
+#[cfg(feature = "db_sqlx")]
+use rocket_db_pools::sqlx;
 
+use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
+use crate::app::modules::users::handlers::helper;
 use crate::app::providers::models::message::PubToken;
 use crate::app::providers::models::project::PubProject;
 use crate::app::providers::services::claims::UserInClaims;
 use crate::app::providers::services::fetch::Fetch;
+use crate::database::connection::Db;
 
 use crate::app::modules::user_project::model::NewUserProject;
-use crate::app::modules::users::model::{NewUser, NewUserWithProject, User, UserExpanded};
-
-use super::helper;
 
 // repositories
 use crate::app::modules::roles::services::repository as role_repository;
@@ -23,10 +23,10 @@ use crate::app::modules::users::services::repository as user_repository;
 
 pub async fn create_user(
     fetch: &State<Fetch>,
-    db: Db,
+    db: &Db,
     user: UserInClaims,
     new_user: NewUserWithProject) -> Result<Json<UserExpanded>, Status> {
-    match helper::helper_role_validation(&db, &user, &new_user).await {
+    match helper::helper_role_validation(db, &user, &new_user).await {
         Ok(_) => {}
         Err(e) => return Err(e),
     }
@@ -34,8 +34,8 @@ pub async fn create_user(
     let project_id = new_user.project_id;
     let active = new_user.active;
 
-    let user = match helper_add_db(&db, new_user.into()).await {
-        Ok(user) => match helper_redirections(fetch, &db, project_id, active, user).await {
+    let user = match helper_add_db(db, new_user.into()).await {
+        Ok(user) => match helper_redirections(fetch, db, project_id, active, user).await {
             Ok(user_exp) => user_exp,
             Err(e) => return Err(e),
         },
@@ -50,7 +50,7 @@ async fn helper_add_db(db: &Db, new_user: NewUser) -> Result<User, ()> {
         Ok(user) => {
             let new_user_token = Uuid::new_v4().to_string();
 
-            match user_repository::update_user_token(&db, user.id, new_user_token).await {
+            match user_repository::update_user_token(db, user.id, new_user_token).await {
                 Ok(user_token) => {
                     let mut user = user;
                     user.user_token = Some(user_token);
@@ -83,17 +83,17 @@ async fn helper_redirections(
         record: None,
     };
 
-    let project = match up_repository::create_user_project(&db, new_user_project).await {
+    let project = match up_repository::create_user_project(db, new_user_project).await {
         Ok(user_project) => user_project,
         Err(_) => return Err(Status::InternalServerError),
     };
 
-    let role = match role_repository::get_role_by_id(&db, user.role_id).await {
+    let role = match role_repository::get_role_by_id(db, user.role_id).await {
         Ok(role) => role,
         Err(_) => return Err(Status::InternalServerError),
     };
 
-    let depends_on = match user_repository::get_user_by_id(&db, user.depends_on).await {
+    let depends_on = match user_repository::get_user_by_id(db, user.depends_on).await {
         Ok(user) => user,
         Err(_) => return Err(Status::InternalServerError),
     };

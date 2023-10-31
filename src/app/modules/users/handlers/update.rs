@@ -11,7 +11,7 @@ use crate::app::modules::users::services::repository as user_repository;
 use crate::app::modules::user_project::services::repository as up_repository;
 
 pub async fn put_update_admin(
-    db: Db,
+    db: &Db,
     admin: UserInClaims,
     id: i32,
     new_user: NewUser,
@@ -27,7 +27,7 @@ pub async fn put_update_admin(
         _ => {}
     }
 
-    let user = user_repository::update_user(&db, id, new_user).await;
+    let user = user_repository::update_user(db, id, new_user).await;
 
     match user {
         Ok(user) => Ok(Json(user)),
@@ -36,7 +36,7 @@ pub async fn put_update_admin(
 }
 
 pub async fn put_update_coord(
-    db: Db,
+    db: &Db,
     coord: UserInClaims,
     id: i32,
     new_user: NewUser,
@@ -61,7 +61,7 @@ pub async fn put_update_coord(
         4 => {
             // updating a patient
             // Validate that the patient depends on a therapist of the coord
-            match user_repository::get_user_by_id(&db, new_user.depends_on).await {
+            match user_repository::get_user_by_id(db, new_user.depends_on).await {
                 Ok(therapist) => {
                     if therapist.depends_on != coord.id {
                         println!("The patient does't depend on a therapist of the coord");
@@ -77,7 +77,7 @@ pub async fn put_update_coord(
         _ => return Err(Status::Unauthorized),
     }
 
-    let user = user_repository::update_user(&db, id, new_user).await;
+    let user = user_repository::update_user(db, id, new_user).await;
 
     match user {
         Ok(user) => Ok(Json(user)),
@@ -87,7 +87,7 @@ pub async fn put_update_coord(
 
 // The only reason is because thera can make a patient active
 pub async fn put_update_thera(
-    db: Db,
+    db: &Db,
     thera: UserInClaims,
     id: i32,
     new_user: NewUser,
@@ -103,7 +103,7 @@ pub async fn put_update_thera(
         }
         _ => return Err(Status::Unauthorized),
     }
-    let user = user_repository::update_user(&db, id, new_user).await;
+    let user = user_repository::update_user(db, id, new_user).await;
 
     match user {
         Ok(user) => Ok(Json(user)),

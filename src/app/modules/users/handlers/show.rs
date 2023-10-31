@@ -1,24 +1,25 @@
 use rocket::http::Status;
 use rocket::serde::json::Json;
 
-use crate::database::connection::Db;
+#[cfg(feature = "db_sqlx")]
+use rocket_db_pools::sqlx;
 
 use crate::app::providers::services::claims::UserInClaims;
-
 use crate::app::modules::users::model::{User, UserExpanded};
 use crate::app::modules::users::handlers::helper;
+use crate::database::connection::Db;
 
 use crate::app::modules::roles::services::repository as role_repository;
 use crate::app::modules::user_project::services::repository as user_project_repository;
 use crate::app::modules::users::services::repository as user_repository;
 
-pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
-    let user = match user_repository::get_user_by_id(&db, id).await {
+pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+    let user = match user_repository::get_user_by_id(db, id).await {
         Ok(user) => user,
         Err(_) => return Err(Status::NotFound),
     };
 
-    match helper::user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
         Err(e) => {
             println!("Error: {}", e);
@@ -27,9 +28,9 @@ pub async fn get_show_admin(db: Db, _admin: UserInClaims, id: i32) -> Result<Jso
     }
 }
 
-pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+pub async fn get_show_coord(db: &Db, coord: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
     // get user
-    let user = user_repository::get_user_by_id(&db, id).await;
+    let user = user_repository::get_user_by_id(db, id).await;
     if user.is_err() {
         return Err(Status::NotFound);
     }
@@ -51,7 +52,7 @@ pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json
         }
         4 => {
             // Validate that the user depends on a therapist of the coord
-            let therapist = user_repository::get_user_by_id(&db, user.depends_on).await;
+            let therapist = user_repository::get_user_by_id(db, user.depends_on).await;
 
             if therapist.is_err() {
                 println!("The user depends on a therapist that doesn't exist");
@@ -67,7 +68,7 @@ pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json
         _ => return Err(Status::Unauthorized),
     }
 
-    match helper::user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
         Err(e) => {
             println!("Error: {}", e);
@@ -76,8 +77,8 @@ pub async fn get_show_coord(db: Db, coord: UserInClaims, id: i32) -> Result<Json
     }
 }
 
-pub async fn get_show_thera(db: Db, thera: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
-    let user = user_repository::get_user_by_id(&db, id).await;
+pub async fn get_show_thera(db: &Db, thera: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+    let user = user_repository::get_user_by_id(db, id).await;
 
     if user.is_err() {
         return Err(Status::NotFound);
@@ -101,7 +102,7 @@ pub async fn get_show_thera(db: Db, thera: UserInClaims, id: i32) -> Result<Json
         _ => return Err(Status::Unauthorized),
     }
 
-    match helper::user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
         Err(e) => {
             println!("Error: {}", e);
@@ -110,8 +111,8 @@ pub async fn get_show_thera(db: Db, thera: UserInClaims, id: i32) -> Result<Json
     }
 }
 
-pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
-    let user = user_repository::get_user_by_id(&db, id).await;
+pub async fn get_show_user(db: &Db, user_claims: UserInClaims, id: i32) -> Result<Json<UserExpanded>, Status> {
+    let user = user_repository::get_user_by_id(db, id).await;
 
     if user.is_err() {
         return Err(Status::NotFound);
@@ -122,7 +123,7 @@ pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result
         return Err(Status::Unauthorized);
     }
 
-    match helper::user_expanded_constructor(&db, user).await {
+    match helper::user_expanded_constructor(db, user).await {
         Ok(user_expanded) => Ok(Json(user_expanded)),
         Err(e) => {
             println!("Error: {}", e);
@@ -132,9 +133,9 @@ pub async fn get_show_user(db: Db, user_claims: UserInClaims, id: i32) -> Result
 }
 
 // Should check or update the user_token?
-pub async fn get_show_robot(db: Db, _robot: UserInClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
-    let user = match user_repository::get_user_by_id(&db, id).await {
-        Ok(user) => match helper::user_expanded_constructor(&db, user).await {
+pub async fn get_show_robot(db: &Db, _robot: UserInClaims, id: i32) -> Result<Json<UserInClaims>, Status> {
+    let user = match user_repository::get_user_by_id(db, id).await {
+        Ok(user) => match helper::user_expanded_constructor(db, user).await {
             Ok(user_expanded) => Ok(Json(user_expanded.into())),
             Err(e) => {
                 println!("Error: {}", e);
