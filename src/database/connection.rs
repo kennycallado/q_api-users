@@ -8,7 +8,7 @@ use rocket_db_pools::{sqlx, Connection, Database};
 
 #[cfg(feature = "db_diesel")]
 #[database("questions")]
-pub struct Db(diesel::PgConnection);
+pub struct Db(pub diesel::PgConnection);
 
 #[cfg(feature = "db_diesel")]
 pub async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
