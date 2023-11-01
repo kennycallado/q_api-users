@@ -13,7 +13,7 @@ use crate::app::providers::services::fetch::Fetch;
 pub struct PubProject {
     pub id: i32,
     pub name: String,
-    pub keys: Vec<Option<String>>,
+    pub keys: Vec<String>,
 }
 
 #[cfg(feature = "fetch")]
@@ -45,7 +45,7 @@ impl PubProject {
                     return Err(Status::from_code(res.status().as_u16()).unwrap());
                 }
 
-                Ok(res.json::<Self>().await.unwrap())
+                Ok(res.json::<PubProject>().await.unwrap())
             }
             Err(_) => Err(Status::InternalServerError),
         }
@@ -97,6 +97,6 @@ impl PubProject {
 pub struct PubProjectWithRecords {
     pub id: i32,
     pub name: String,
-    pub keys: Vec<Option<String>>,
+    pub keys: Option<Vec<String>>,
     pub records: Option<Vec<PubRecord>>,
 }

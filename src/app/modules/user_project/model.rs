@@ -21,7 +21,6 @@ pub struct UserProject {
     pub user_id: i32,
     pub project_id: i32,
     pub active: bool,
-    // pub keys: Vec<Option<String>>,
     pub keys: Vec<String>,
     pub record: Option<rocket::serde::json::Value>,
 }
@@ -39,6 +38,6 @@ pub struct NewUserProject {
     pub user_id: i32,
     pub project_id: i32,
     pub active: Option<bool>,
-    pub keys: Vec<Option<String>>,
+    pub keys: Vec<String>,
     pub record: Option<rocket::serde::json::Value>,
 }

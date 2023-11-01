@@ -70,6 +70,7 @@ async fn helper_redirections(
     project_id: i32,
     active: Option<bool>,
     user: User) -> Result<UserExpanded, Status> {
+
     let project = match PubProject::init_user(fetch, project_id, user.id).await {
         Ok(project) => project,
         Err(e) => return Err(e),
