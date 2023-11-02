@@ -6,7 +6,7 @@ edition   = "2021"
 [features]
 default   = []
 
-cron      = ["db_diesel", "tokio-cron-scheduler", "reqwest", "escalon-jobs"]
+cron      = ["tokio-cron-scheduler", "reqwest", "escalon-jobs"]
 db_diesel = ["diesel", "diesel_migrations", "rocket_sync_db_pools", "openssl"]
 db_sqlx   = ["sqlx", "rocket_db_pools"]
 fetch     = ["reqwest", "openssl/vendored"]
