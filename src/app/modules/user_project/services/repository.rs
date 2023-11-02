@@ -38,12 +38,11 @@ pub async fn create_user_project(
 ) -> Result<UserProject, sqlx::Error> {
     let user_project = sqlx::query_as!(
         UserProject,
-        "INSERT INTO user_project (user_id, project_id, active, keys, record) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        "INSERT INTO user_project (user_id, project_id, active, keys) VALUES ($1, $2, $3, $4) RETURNING *",
         new_user_project.user_id,
         new_user_project.project_id,
         new_user_project.active,
-        &new_user_project.keys,
-        new_user_project.record
+        &new_user_project.keys
     ).fetch_one(&db.0).await?;
 
     Ok(user_project)
