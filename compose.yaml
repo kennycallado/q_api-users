@@ -110,7 +110,7 @@ services:
   auth_api:
     image: kennycallado/q-api-auth:latest
     # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
+    #   - "host.docker.internal:host-gateway" # seems doesn't work
     ports:
       - "8003:8000"
     
@@ -121,6 +121,7 @@ services:
 
       - ROCKET_PROFILE_URL="http://profiles_api:8000/api/v1/profile/"
       - ROCKET_USER_URL="http://users_api:8000/api/v1/user/"
+      # - ROCKET_USER_URL="http://host.docker.internal:8000/api/v1/user/"
     depends_on:
       - database
   # }}}
